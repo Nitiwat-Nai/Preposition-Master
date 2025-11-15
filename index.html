@@ -1,17 +1,17 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="th">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Preposition Master - เกมข้อสอบคำบุพบท</title>
+    <title>Preposition Master - เกมข้อสอบคำบุพบท V.2</title>
     <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@400;700;900&display=swap" rel="stylesheet">
 
     <style>
-        /* --- Mobile-First CSS with New Color Theme (Purple/Pink/Teal) --- */
+        /* --- Mobile-First CSS with New Color Theme (Purple/Pink/Green) --- */
         :root {
             --color-primary: #9C27B0; /* Deep Purple (ปุ่ม Next) */
             --color-secondary: #E1BEE7; /* Light Lavender (ขอบปุ่มตัวเลือก) */
-            --color-correct: #00BCD4; /* Cyan/Teal (สีถูก) */
+            --color-correct: #4CAF50; /* Primary Green (สีถูก - แก้ไขจาก Teal) */
             --color-wrong: #FF5252; /* Bright Red (สีผิด) */
             --color-bg: #F3E5F5; /* Very Light Purple/Pink (พื้นหลัง) */
             --color-card: #FFFFFF; /* White (สำหรับ Header/ส่วนข้อมูล) */
@@ -179,10 +179,11 @@
         }
         
         /* Feedback Colors */
+        /* แก้ไข: ใช้สีเขียวหลัก (var(--color-correct)) */
         .option-btn.correct {
             border-color: var(--color-correct) !important; 
-            box-shadow: 0 0 15px #4DD0E1; 
-            background-color: #E0F7FA; 
+            box-shadow: 0 0 15px #81C784; /* Soft green glow */
+            background-color: #E8F5E9; /* Very light green background */
             transform: scale(1.02);
         }
         .option-btn.incorrect {
@@ -226,7 +227,7 @@
 
     <div class="container">
         <header>
-            <h1>Preposition Master</h1>
+            <h1>Preposition Master V.2</h1>
         </header>
 
         <div id="level-select-screen" class="screen active">
@@ -264,23 +265,23 @@
     <audio id="incorrect-audio" src="sounds/incorrect.mp3"></audio>
 
     <script>
-        /* ------------------- JavaScript Core Logic (Preposition Master) ------------------- */
+        /* ------------------- JavaScript Core Logic (Preposition Master V2) ------------------- */
 
         // --- DATA (Level 1: Basic Place & Time) ---
-        // คำถามประกอบด้วย: sentence (ประโยค), correct (คำบุพบทที่ถูก), distractors (ตัวหลอกเพิ่มเติม)
+        // คำถามประกอบด้วย: sentence (ประโยค), correct (คำบุพบทที่ถูก), distractors (ตัวหลอกเพิ่มเติม), ttsContext (บริบทสำหรับการอ่านออกเสียง)
         const ALL_LEVEL_QUIZZES = [
             // LEVEL 1: Basic Place & Time (in, on, at, under, behind)
             { level: 1, title: "Level 1: ตำแหน่งและเวลาพื้นฐาน", questions: [
-                { sentence: "The book is ______ the table.", correct: "on", distractors: ["in", "at"] },
-                { sentence: "She lives ______ Bangkok.", correct: "in", distractors: ["on", "at"] },
-                { sentence: "The movie starts ______ 7 PM.", correct: "at", distractors: ["in", "on"] },
-                { sentence: "My birthday is ______ January.", correct: "in", distractors: ["on", "at"] },
-                { sentence: "We went to the beach ______ Sunday.", correct: "on", distractors: ["in", "at"] },
-                { sentence: "The cat is hiding ______ the sofa.", correct: "under", distractors: ["over", "at"] },
-                { sentence: "I saw him standing ______ the door.", correct: "at", distractors: ["in", "on"] },
-                { sentence: "The keys are ______ my pocket.", correct: "in", distractors: ["on", "at"] },
-                { sentence: "The lamp is ______ the picture.", correct: "above", distractors: ["under", "in"] },
-                { sentence: "The dog is walking ______ me.", correct: "behind", distractors: ["in front of", "on"] },
+                { sentence: "The book is ______ the table.", correct: "on", distractors: ["in", "at"], ttsContext: "The book is on the table." },
+                { sentence: "She lives ______ Bangkok.", correct: "in", distractors: ["on", "at"], ttsContext: "She lives in Bangkok." },
+                { sentence: "The movie starts ______ 7 PM.", correct: "at", distractors: ["in", "on"], ttsContext: "The movie starts at 7 P.M." },
+                { sentence: "My birthday is ______ January.", correct: "in", distractors: ["on", "at"], ttsContext: "My birthday is in January." },
+                { sentence: "We went to the beach ______ Sunday.", correct: "on", distractors: ["in", "at"], ttsContext: "We went to the beach on Sunday." },
+                { sentence: "The cat is hiding ______ the sofa.", correct: "under", distractors: ["over", "at"], ttsContext: "The cat is hiding under the sofa." },
+                { sentence: "I saw him standing ______ the door.", correct: "at", distractors: ["in", "on"], ttsContext: "I saw him standing at the door." },
+                { sentence: "The keys are ______ my pocket.", correct: "in", distractors: ["on", "at"], ttsContext: "The keys are in my pocket." },
+                { sentence: "The lamp is ______ the picture.", correct: "above", distractors: ["under", "in"], ttsContext: "The lamp is above the picture." },
+                { sentence: "The dog is walking ______ me.", correct: "behind", distractors: ["in front of", "on"], ttsContext: "The dog is walking behind me." },
             ]},
             // LEVEL 2 และ 3 สามารถเพิ่มภายหลังได้
             { level: 2, title: "Level 2: การเคลื่อนที่และกริยาวลี (กำลังพัฒนา)", questions: []},
@@ -298,8 +299,7 @@
         const levelTitleEl = document.getElementById('level-title');
         const qCountEl = document.getElementById('q-count');
         const scoreEl = document.getElementById('score');
-        // const audioButton = document.getElementById('audio-button'); // Removed
-        const questionSentenceEl = document.getElementById('question-sentence'); // New Element
+        const questionSentenceEl = document.getElementById('question-sentence');
         const feedbackMessageEl = document.getElementById('feedback-message');
         const optionsArea = document.getElementById('options-area');
         const nextBtn = document.getElementById('next-btn');
@@ -307,6 +307,10 @@
         const correctAudio = document.getElementById('correct-audio');
         const incorrectAudio = document.getElementById('incorrect-audio');
 
+        // TTS Setup
+        const synth = window.speechSynthesis;
+        let ttsUtterance = new SpeechSynthesisUtterance();
+        ttsUtterance.lang = 'en-US'; // กำหนดภาษาอังกฤษ
 
         // --- GAME STATE ---
         let currentLevelData = null;
@@ -316,6 +320,29 @@
         let currentQuestion = {};
         let currentLevelQuestions = []; // Questions for the current round
 
+
+        // --- TTS FUNCTION ---
+        /** * ฟังก์ชันอ่านประโยคออกเสียง 
+         * @param {string} text - ประโยคที่ต้องการอ่าน
+         * @param {function} onEndCallback - ฟังก์ชันที่เรียกใช้เมื่ออ่านจบ
+         */
+        function speakAnswer(text, onEndCallback) {
+            if (synth.speaking) {
+                synth.cancel();
+            }
+            
+            ttsUtterance.text = text;
+            
+            // ลบ Event Listener เก่าออกก่อน
+            ttsUtterance.onend = null; 
+
+            if (onEndCallback) {
+                ttsUtterance.onend = onEndCallback;
+            }
+            
+            synth.speak(ttsUtterance);
+        }
+        
 
         // --- UI & SCREEN MANAGEMENT ---
 
@@ -335,12 +362,12 @@
                 
                 const titleSpan = document.createElement('span');
                 titleSpan.className = 'level-btn-title';
-                titleSpan.textContent = data.title.split(': ')[1]; // เอาเฉพาะชื่อหัวข้อ
+                titleSpan.textContent = data.title.split(': ')[1];
                 
                 btn.appendChild(titleSpan);
                 btn.setAttribute('data-level', data.level);
 
-                // Disable Level 2 & 3 for V1
+                // Disable Level 2 & 3 for V2
                 if (data.level !== 1) {
                     btn.disabled = true;
                     btn.style.opacity = '0.5';
@@ -366,7 +393,7 @@
 
         function startLevel(levelId) {
             currentLevelData = ALL_LEVEL_QUIZZES.find(data => data.level === levelId);
-            currentLevelQuestions = [...currentLevelData.questions].sort(() => 0.5 - Math.random()); // สุ่มคำถาม
+            currentLevelQuestions = [...currentLevelData.questions].sort(() => 0.5 - Math.random());
             currentQuizIndex = 0;
             score = 0; 
             showScreen('game-screen');
@@ -384,7 +411,7 @@
             nextBtn.disabled = true;
             feedbackMessageEl.textContent = 'เลือกคำตอบที่ถูกต้อง';
             feedbackMessageEl.style.color = 'var(--color-text-dark)';
-            questionSentenceEl.innerHTML = ''; // Reset question text
+            questionSentenceEl.innerHTML = '';
 
             // Reset UI
             optionsArea.innerHTML = ''; 
@@ -397,22 +424,18 @@
         function getPrepositionOptions(correctPreposition, distractors) {
             let options = [correctPreposition];
             
-            // 1. นำตัวหลอกเฉพาะของข้อนั้นๆ เข้ามารวม
             options = [...options, ...distractors];
 
-            // 2. สร้างตัวหลอกเพิ่ม (ถ้าไม่ถึง 4) จาก Preposition ที่ใช้บ่อยอื่นๆ
             const commonPrepositions = ["in", "on", "at", "to", "for", "with", "by", "from"];
             
             const uniqueOptions = new Set(options);
 
-            // เพิ่มตัวหลอกที่ไม่ซ้ำจนกว่าจะได้ครบ 4 ตัว
             for (const prep of commonPrepositions) {
                 if (uniqueOptions.size < OPTIONS_COUNT && !uniqueOptions.has(prep)) {
                     uniqueOptions.add(prep);
                 }
             }
 
-            // ถ้ายังไม่ครบ 4 ตัว อาจใช้ตัวหลอกจากข้ออื่นใน Level เดียวกัน (ตัวเลือกเสริม)
             if (uniqueOptions.size < OPTIONS_COUNT) {
                  for (const q of currentLevelQuestions) {
                     if (uniqueOptions.size >= OPTIONS_COUNT) break;
@@ -424,7 +447,6 @@
             
             const finalOptions = Array.from(uniqueOptions);
             
-            // สุ่มลำดับ
             finalOptions.sort(() => Math.random() - 0.5); 
             
             return finalOptions.slice(0, OPTIONS_COUNT);
@@ -434,14 +456,13 @@
         function setupQuestion() {
             currentQuestion = currentLevelQuestions[currentQuizIndex];
             
-            // 1. แสดงประโยคคำถาม โดยใช้ span class="blank" แทนช่องว่าง ______
+            // แสดงประโยคคำถาม
             const formattedSentence = currentQuestion.sentence.replace('______', '<span class="blank">______</span>');
             questionSentenceEl.innerHTML = formattedSentence;
 
-            // 2. สร้างตัวเลือก 4 ตัว
+            // สร้างตัวเลือก 4 ตัว
             const options = getPrepositionOptions(currentQuestion.correct, currentQuestion.distractors || []);
             
-            // 3. สร้างปุ่มตัวเลือก
             options.forEach(prep => {
                 const button = document.createElement('button');
                 button.className = 'option-btn';
@@ -470,6 +491,9 @@
             });
 
             // 2. Feedback
+            let correctPrep = currentQuestion.correct;
+            let ttsText = currentQuestion.ttsContext;
+
             if (isCorrect) {
                 correctAudio.currentTime = 0;
                 correctAudio.play();
@@ -490,14 +514,11 @@
                 incorrectAudio.play();
                 selectedButton.classList.add('incorrect');
                 
-                const correctPrep = currentQuestion.correct;
-                
-                // แทนที่ช่องว่างด้วยคำตอบที่ถูกและเน้นสี
+                // แทนที่ช่องว่างด้วยคำตอบที่ผิดที่ผู้เล่นเลือก และเน้นสีแดง
                 questionSentenceEl.innerHTML = currentQuestion.sentence.replace(
                     '______', 
                     `<span style="color:var(--color-wrong); font-weight:900;">${selectedPreposition.toUpperCase()}</span>`
                 );
-
 
                 feedbackMessageEl.textContent = `❌ ผิด! คำตอบที่ถูกคือ ${correctPrep.toUpperCase()}`;
                 feedbackMessageEl.style.color = 'var(--color-wrong)';
@@ -509,13 +530,25 @@
                 }
             }
             
-            // 3. Update status and enable next button
-            updateStatusBar();
-            nextBtn.disabled = false;
+            // 3. TTS (อ่านประโยคที่ถูกต้อง)
+            speakAnswer(ttsText, () => {
+                // 4. Update status and enable next button
+                updateStatusBar();
+                
+                // 5. หน่วงเวลา 0.5 วินาที ก่อนเปิดปุ่ม Next
+                setTimeout(() => {
+                    nextBtn.disabled = false;
+                }, 500); 
+            });
         }
 
 
         function endGame() {
+            // Cancel TTS if it was speaking
+            if (synth.speaking) {
+                synth.cancel();
+            }
+
             levelTitleEl.textContent = `จบ Level ${currentLevelData.level}!`;
             qCountEl.textContent = '';
             
@@ -539,6 +572,11 @@
         
         // Next/Go Back button
         nextBtn.addEventListener('click', () => {
+            // Cancel TTS if it was speaking when moving to next screen
+            if (synth.speaking) {
+                synth.cancel();
+            }
+
             if (currentQuizIndex >= currentLevelQuestions.length) {
                 // Back to Level Selection
                 showScreen('level-select-screen');
