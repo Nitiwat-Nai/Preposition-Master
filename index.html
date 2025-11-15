@@ -3,15 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Preposition Master - เกมข้อสอบคำบุพบท V.2</title>
+    <title>Preposition Master - เกมข้อสอบคำบุพบท</title>
     <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@400;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 
     <style>
         /* --- Mobile-First CSS with New Color Theme (Purple/Pink/Green) --- */
         :root {
             --color-primary: #9C27B0; /* Deep Purple (ปุ่ม Next) */
             --color-secondary: #E1BEE7; /* Light Lavender (ขอบปุ่มตัวเลือก) */
-            --color-correct: #4CAF50; /* Primary Green (สีถูก - แก้ไขจาก Teal) */
+            --color-correct: #4CAF50; /* Primary Green (สีถูก) */
             --color-wrong: #FF5252; /* Bright Red (สีผิด) */
             --color-bg: #F3E5F5; /* Very Light Purple/Pink (พื้นหลัง) */
             --color-card: #FFFFFF; /* White (สำหรับ Header/ส่วนข้อมูล) */
@@ -72,8 +73,9 @@
 
         /* --- Level Selection Screen --- */
         #level-select-screen .level-grid {
+            /* ปรับเป็น Grid 2 คอลัมน์สำหรับ Level ที่เยอะขึ้น */
             display: grid;
-            grid-template-columns: repeat(3, 1fr);
+            grid-template-columns: 1fr 1fr;
             gap: 15px;
             padding: 1rem 0;
         }
@@ -81,23 +83,33 @@
             background-color: #673AB7; 
             color: var(--color-text-light);
             border: none;
-            padding: 1.5rem 0.5rem;
+            padding: 1.2rem 0.5rem; /* ลด padding เพื่อให้มีพื้นที่มากขึ้น */
             border-radius: 12px;
-            font-size: 1.4rem;
+            font-size: 1.1rem;
             font-weight: bold;
             cursor: pointer;
             box-shadow: 0 4px 0 #5E35B1;
             transition: transform 0.1s, box-shadow 0.1s;
+            text-align: left;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
         }
         .level-btn:active {
             transform: translateY(2px);
             box-shadow: 0 2px 0 #5E35B1;
         }
         .level-btn-title {
-            font-size: 0.8rem;
+            font-size: 0.9rem;
             font-weight: 400;
             display: block;
             margin-top: 5px;
+            color: #D1C4E9;
+        }
+        .level-btn-type {
+            font-size: 0.7rem;
+            font-weight: 700;
+            opacity: 0.8;
         }
 
         /* --- Game Screen --- */
@@ -127,16 +139,17 @@
             flex-direction: column;
             justify-content: center;
             align-items: center;
-            margin-bottom: 2rem;
+            margin-bottom: 1.5rem; /* ลด margin */
             min-height: 100px;
             padding: 0 10px; 
         }
         #question-sentence {
-            font-size: 1.3rem;
+            /* แก้ไข: เพิ่มขนาดตัวอักษรของโจทย์ */
+            font-size: 1.6rem; 
             font-weight: bold;
             line-height: 1.5;
             text-align: left;
-            padding: 10px;
+            padding: 15px; 
             background-color: #f7f7f7;
             border-radius: 8px;
             width: 100%;
@@ -149,7 +162,7 @@
             padding: 0 5px;
         }
         
-        /* Choices Area (4-button Grid) - Adapted for Prepositions */
+        /* Choices Area (4-button Grid) */
         #options-area {
             display: grid;
             grid-template-columns: 1fr 1fr; 
@@ -161,7 +174,7 @@
             background-color: var(--color-button-bg);
             border: 3px solid var(--color-secondary); 
             border-radius: 12px; 
-            padding: 15px 10px;
+            padding: 10px 10px; /* แก้ไข: ลดความสูงของปุ่ม */
             cursor: pointer;
             transition: all 0.2s;
             box-sizing: border-box;
@@ -169,7 +182,7 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            font-size: 1.5em; /* Bigger font for single preposition words */
+            font-size: 1.5em; 
             font-weight: bold;
             color: var(--color-text-dark);
         }
@@ -179,11 +192,10 @@
         }
         
         /* Feedback Colors */
-        /* แก้ไข: ใช้สีเขียวหลัก (var(--color-correct)) */
         .option-btn.correct {
             border-color: var(--color-correct) !important; 
-            box-shadow: 0 0 15px #81C784; /* Soft green glow */
-            background-color: #E8F5E9; /* Very light green background */
+            box-shadow: 0 0 15px #81C784; 
+            background-color: #E8F5E9; 
             transform: scale(1.02);
         }
         .option-btn.incorrect {
@@ -227,15 +239,15 @@
 
     <div class="container">
         <header>
-            <h1>Preposition Master V.2</h1>
+            <h1>🗺️ Preposition Master</h1>
         </header>
 
         <div id="level-select-screen" class="screen active">
-            <h2>🎯 เกมข้อสอบคำบุพบท</h2>
-            <p>เลือกชุดคำบุพบทที่คุณต้องการฝึกฝน (Level ละ 10 ข้อ):</p>
+            <h2>🎯 เลือกชุดคำบุพบท</h2>
+            <p>ฝึกฝนตามประเภทและระดับ (10 ข้อ/ระดับย่อย):</p>
             <div class="level-grid" id="level-grid">
                 </div>
-            <p style="padding-top: 2rem; color:#9E9E9E;">มีทั้งหมด 3 Levels (กำลังพัฒนา)</p>
+            <p style="padding-top: 1rem; color:#9E9E9E;">มี 4 ประเภทหลัก แต่ละประเภทมี 3 ระดับ รวม 120 ข้อ</p>
         </div>
 
         <div id="game-screen" class="screen">
@@ -265,27 +277,170 @@
     <audio id="incorrect-audio" src="sounds/incorrect.mp3"></audio>
 
     <script>
-        /* ------------------- JavaScript Core Logic (Preposition Master V2) ------------------- */
+        /* ------------------- JavaScript Core Logic (Preposition Master V4) ------------------- */
 
-        // --- DATA (Level 1: Basic Place & Time) ---
-        // คำถามประกอบด้วย: sentence (ประโยค), correct (คำบุพบทที่ถูก), distractors (ตัวหลอกเพิ่มเติม), ttsContext (บริบทสำหรับการอ่านออกเสียง)
-        const ALL_LEVEL_QUIZZES = [
-            // LEVEL 1: Basic Place & Time (in, on, at, under, behind)
-            { level: 1, title: "Level 1: ตำแหน่งและเวลาพื้นฐาน", questions: [
-                { sentence: "The book is ______ the table.", correct: "on", distractors: ["in", "at"], ttsContext: "The book is on the table." },
-                { sentence: "She lives ______ Bangkok.", correct: "in", distractors: ["on", "at"], ttsContext: "She lives in Bangkok." },
-                { sentence: "The movie starts ______ 7 PM.", correct: "at", distractors: ["in", "on"], ttsContext: "The movie starts at 7 P.M." },
-                { sentence: "My birthday is ______ January.", correct: "in", distractors: ["on", "at"], ttsContext: "My birthday is in January." },
-                { sentence: "We went to the beach ______ Sunday.", correct: "on", distractors: ["in", "at"], ttsContext: "We went to the beach on Sunday." },
-                { sentence: "The cat is hiding ______ the sofa.", correct: "under", distractors: ["over", "at"], ttsContext: "The cat is hiding under the sofa." },
-                { sentence: "I saw him standing ______ the door.", correct: "at", distractors: ["in", "on"], ttsContext: "I saw him standing at the door." },
-                { sentence: "The keys are ______ my pocket.", correct: "in", distractors: ["on", "at"], ttsContext: "The keys are in my pocket." },
-                { sentence: "The lamp is ______ the picture.", correct: "above", distractors: ["under", "in"], ttsContext: "The lamp is above the picture." },
-                { sentence: "The dog is walking ______ me.", correct: "behind", distractors: ["in front of", "on"], ttsContext: "The dog is walking behind me." },
+        // --- DATA (4 Main Types x 3 Sub-Levels = 12 Levels Total) ---
+        const LEVEL_DATA = [
+            // ========================================================================================
+            // TYPE 1: PLACE (ตำแหน่ง)
+            { type: 1, title: "1. PLACE (ตำแหน่ง)", levels: [
+                { sub: 1, name: "Basic (in, on, at)", questions: [ // L1.1
+                    { sentence: "The book is ______ the table.", correct: "on", distractors: ["in", "at", "to"], ttsContext: "The book is on the table." },
+                    { sentence: "She lives ______ Bangkok.", correct: "in", distractors: ["on", "at", "over"], ttsContext: "She lives in Bangkok." },
+                    { sentence: "I saw him standing ______ the corner.", correct: "at", distractors: ["in", "on", "from"], ttsContext: "I saw him standing at the corner." },
+                    { sentence: "The picture is hanging ______ the wall.", correct: "on", distractors: ["in", "at", "with"], ttsContext: "The picture is hanging on the wall." },
+                    { sentence: "The toys are ______ the box.", correct: "in", distractors: ["on", "at", "under"], ttsContext: "The toys are in the box." },
+                    { sentence: "The cat is hiding ______ the sofa.", correct: "under", distractors: ["over", "at", "by"], ttsContext: "The cat is hiding under the sofa." },
+                    { sentence: "I parked my car ______ the building.", correct: "behind", distractors: ["in", "on", "into"], ttsContext: "I parked my car behind the building." },
+                    { sentence: "The plane flew ______ the mountains.", correct: "over", distractors: ["under", "at", "on"], ttsContext: "The plane flew over the mountains." },
+                    { sentence: "Please meet me ______ the entrance.", correct: "at", distractors: ["in", "on", "with"], ttsContext: "Please meet me at the entrance." },
+                    { sentence: "There is a beautiful garden ______ the house.", correct: "behind", distractors: ["on", "at", "with"], ttsContext: "There is a beautiful garden behind the house." },
+                ]},
+                { sub: 2, name: "Intermediate (between, next to)", questions: [ // L1.2
+                    { sentence: "The store is located ______ the bank and the post office.", correct: "between", distractors: ["among", "near", "with"], ttsContext: "The store is located between the bank and the post office." },
+                    { sentence: "The three friends sat ______ the campfire.", correct: "around", distractors: ["between", "next to", "on"], ttsContext: "The three friends sat around the campfire." },
+                    { sentence: "My house is ______ the school.", correct: "near", distractors: ["on", "at", "above"], ttsContext: "My house is near the school." },
+                    { sentence: "The pharmacy is ______ the coffee shop.", correct: "next to", distractors: ["in", "at", "over"], ttsContext: "The pharmacy is next to the coffee shop." },
+                    { sentence: "He placed his hand ______ my shoulder.", correct: "on", distractors: ["in", "at", "under"], ttsContext: "He placed his hand on my shoulder." },
+                    { sentence: "The children played happily ______ the trees.", correct: "among", distractors: ["between", "near", "on"], ttsContext: "The children played happily among the trees." },
+                    { sentence: "The whiteboard is ______ the projector.", correct: "opposite", distractors: ["beside", "at", "over"], ttsContext: "The whiteboard is opposite the projector." },
+                    { sentence: "I left my shoes ______ the door.", correct: "by", distractors: ["in", "on", "above"], ttsContext: "I left my shoes by the door." },
+                    { sentence: "The clouds floated ______ the city.", correct: "above", distractors: ["under", "at", "on"], ttsContext: "The clouds floated above the city." },
+                    { sentence: "The ship sailed ______ the coast.", correct: "along", distractors: ["in", "at", "under"], ttsContext: "The ship sailed along the coast." },
+                ]},
+                { sub: 3, name: "Advanced (in front of, over)", questions: [ // L1.3
+                    { sentence: "They pitched their tent ______ the lake.", correct: "beside", distractors: ["in front of", "over", "at"], ttsContext: "They pitched their tent beside the lake." },
+                    { sentence: "The car is parked ______ the building entrance.", correct: "in front of", distractors: ["behind", "on", "over"], ttsContext: "The car is parked in front of the building entrance." },
+                    { sentence: "The temperature is ten degrees ______ zero.", correct: "below", distractors: ["above", "on", "at"], ttsContext: "The temperature is ten degrees below zero." },
+                    { sentence: "The plane flew ______ the city.", correct: "over", distractors: ["through", "in", "at"], ttsContext: "The plane flew over the city." },
+                    { sentence: "The restaurant is just ______ the corner.", correct: "around", distractors: ["in", "on", "at"], ttsContext: "The restaurant is just around the corner." },
+                    { sentence: "I often find him hiding ______ the curtains.", correct: "behind", distractors: ["in front of", "on", "at"], ttsContext: "I often find him hiding behind the curtains." },
+                    { sentence: "The sign was placed ______ the top of the hill.", correct: "at", distractors: ["on", "in", "over"], ttsContext: "The sign was placed at the top of the hill." },
+                    { sentence: "The baby is lying ______ his mother.", correct: "beside", distractors: ["among", "over", "at"], ttsContext: "The baby is lying beside his mother." },
+                    { sentence: "There's a fence running ______ the garden.", correct: "around", distractors: ["in", "at", "on"], ttsContext: "There's a fence running around the garden." },
+                    { sentence: "We must look ______ the surface.", correct: "beneath", distractors: ["above", "on", "at"], ttsContext: "We must look beneath the surface." },
+                ]},
             ]},
-            // LEVEL 2 และ 3 สามารถเพิ่มภายหลังได้
-            { level: 2, title: "Level 2: การเคลื่อนที่และกริยาวลี (กำลังพัฒนา)", questions: []},
-            { level: 3, title: "Level 3: คำบุพบทซับซ้อน (กำลังพัฒนา)", questions: []},
+            // ========================================================================================
+            // TYPE 2: TIME (เวลา)
+            { type: 2, title: "2. TIME (เวลา)", levels: [
+                { sub: 1, name: "Basic (at, on, in)", questions: [ // L2.1
+                    { sentence: "The sun rises ______ the morning.", correct: "in", distractors: ["on", "at", "to"], ttsContext: "The sun rises in the morning." },
+                    { sentence: "I always wake up ______ six o'clock.", correct: "at", distractors: ["in", "on", "for"], ttsContext: "I always wake up at six o'clock." },
+                    { sentence: "We have a holiday ______ December.", correct: "in", distractors: ["on", "at", "with"], ttsContext: "We have a holiday in December." },
+                    { sentence: "She was born ______ the 14th of June.", correct: "on", distractors: ["in", "at", "to"], ttsContext: "She was born on the 14th of June." },
+                    { sentence: "I will call you ______ the weekend.", correct: "on", distractors: ["in", "at", "by"], ttsContext: "I will call you on the weekend." },
+                    { sentence: "Dinner will be ready ______ half an hour.", correct: "in", distractors: ["on", "at", "before"], ttsContext: "Dinner will be ready in half an hour." },
+                    { sentence: "The party is ______ Friday night.", correct: "on", distractors: ["in", "at", "for"], ttsContext: "The party is on Friday night." },
+                    { sentence: "I feel tired ______ midnight.", correct: "at", distractors: ["in", "on", "until"], ttsContext: "I feel tired at midnight." },
+                    { sentence: "He worked there ______ 2020.", correct: "in", distractors: ["on", "at", "since"], ttsContext: "He worked there in 2020." },
+                    { sentence: "She always studies ______ night.", correct: "at", distractors: ["in", "on", "during"], ttsContext: "She always studies at night." },
+                ]},
+                { sub: 2, name: "Intermediate (since, for, during)", questions: [ // L2.2
+                    { sentence: "We have been waiting ______ two hours.", correct: "for", distractors: ["since", "during", "in"], ttsContext: "We have been waiting for two hours." },
+                    { sentence: "I haven't seen him ______ last summer.", correct: "since", distractors: ["for", "during", "at"], ttsContext: "I haven't seen him since last summer." },
+                    { sentence: "She fell asleep ______ the movie.", correct: "during", distractors: ["for", "since", "on"], ttsContext: "She fell asleep during the movie." },
+                    { sentence: "They traveled abroad ______ the summer break.", correct: "during", distractors: ["for", "since", "at"], ttsContext: "They traveled abroad during the summer break." },
+                    { sentence: "He will finish the report ______ next week.", correct: "by", distractors: ["until", "for", "since"], ttsContext: "He will finish the report by next week." },
+                    { sentence: "I worked continuously ______ 5 AM.", correct: "until", distractors: ["by", "for", "in"], ttsContext: "I worked continuously until 5 A.M." },
+                    { sentence: "It has been raining heavily ______ Monday morning.", correct: "since", distractors: ["for", "during", "on"], ttsContext: "It has been raining heavily since Monday morning." },
+                    { sentence: "We stopped talking ______ a moment.", correct: "for", distractors: ["since", "during", "at"], ttsContext: "We stopped talking for a moment." },
+                    { sentence: "I finished my homework just ______ the deadline.", correct: "before", distractors: ["after", "during", "at"], ttsContext: "I finished my homework just before the deadline." },
+                    { sentence: "We waited for the bus ______ 10 minutes.", correct: "for", distractors: ["since", "during", "in"], ttsContext: "We waited for the bus for 10 minutes." },
+                ]}, 
+                { sub: 3, name: "Advanced (by, until, in time, on time)", questions: [ // L2.3
+                    { sentence: "You must submit the application ______ Friday.", correct: "by", distractors: ["until", "for", "since"], ttsContext: "You must submit the application by Friday." },
+                    { sentence: "The meeting is scheduled to start ______ 2:00 PM.", correct: "at", distractors: ["in", "on", "by"], ttsContext: "The meeting is scheduled to start at 2 P.M." },
+                    { sentence: "We arrived ______ time for the flight.", correct: "in", distractors: ["on", "at", "by"], ttsContext: "We arrived in time for the flight." },
+                    { sentence: "The train left exactly ______ time.", correct: "on", distractors: ["in", "at", "by"], ttsContext: "The train left exactly on time." },
+                    { sentence: "The contract is valid ______ the end of the year.", correct: "until", distractors: ["by", "for", "since"], ttsContext: "The contract is valid until the end of the year." },
+                    { sentence: "He promised to be here ______ five o'clock.", correct: "by", distractors: ["until", "since", "in"], ttsContext: "He promised to be here by five o'clock." },
+                    { sentence: "The shop is closed ______ Sundays.", correct: "on", distractors: ["in", "at", "for"], ttsContext: "The shop is closed on Sundays." },
+                    { sentence: "I haven't smoked a cigarette ______ five years.", correct: "for", distractors: ["since", "during", "at"], ttsContext: "I haven't smoked a cigarette for five years." },
+                    { sentence: "We managed to get to the airport just ______ time.", correct: "in", distractors: ["on", "at", "by"], ttsContext: "We managed to get to the airport just in time." },
+                    { sentence: "I'll wait for you ______ the movie starts.", correct: "until", distractors: ["by", "for", "since"], ttsContext: "I'll wait for you until the movie starts." },
+                ]},
+            ]},
+            // ========================================================================================
+            // TYPE 3: DIRECTION/MOVEMENT (ทิศทาง/การเคลื่อนที่)
+            { type: 3, title: "3. DIRECTION (ทิศทาง)", levels: [
+                { sub: 1, name: "Basic (to, into, through)", questions: [ // L3.1
+                    { sentence: "She walked ______ the park.", correct: "to", distractors: ["into", "through", "on"], ttsContext: "She walked to the park." },
+                    { sentence: "He jumped ______ the pool.", correct: "into", distractors: ["to", "at", "on"], ttsContext: "He jumped into the pool." },
+                    { sentence: "We drove ______ the tunnel.", correct: "through", distractors: ["into", "on", "at"], ttsContext: "We drove through the tunnel." },
+                    { sentence: "The child ran ______ his mother.", correct: "toward", distractors: ["from", "on", "in"], ttsContext: "The child ran toward his mother." },
+                    { sentence: "The hiker climbed ______ the mountain.", correct: "up", distractors: ["down", "across", "on"], ttsContext: "The hiker climbed up the mountain." },
+                    { sentence: "I took the book ______ the shelf.", correct: "from", distractors: ["to", "out of", "on"], ttsContext: "I took the book from the shelf." },
+                    { sentence: "The tourists walked ______ the street.", correct: "along", distractors: ["into", "at", "on"], ttsContext: "The tourists walked along the street." },
+                    { sentence: "She stepped ______ the car.", correct: "out of", distractors: ["into", "on", "to"], ttsContext: "She stepped out of the car." },
+                    { sentence: "The dog chased the cat ______ the house.", correct: "around", distractors: ["across", "through", "to"], ttsContext: "The dog chased the cat around the house." },
+                    { sentence: "He moved ______ London when he was 10.", correct: "to", distractors: ["at", "in", "from"], ttsContext: "He moved to London when he was 10." },
+                ]},
+                { sub: 2, name: "Intermediate (across, along, past)", questions: [ // L3.2
+                    { sentence: "The ferry takes people ______ the river.", correct: "across", distractors: ["along", "past", "into"], ttsContext: "The ferry takes people across the river." },
+                    { sentence: "We strolled quietly ______ the beach.", correct: "along", distractors: ["across", "past", "through"], ttsContext: "We strolled quietly along the beach." },
+                    { sentence: "I saw her driving ______ my house yesterday.", correct: "past", distractors: ["across", "along", "into"], ttsContext: "I saw her driving past my house yesterday." },
+                    { sentence: "He threw the ball ______ the fence.", correct: "over", distractors: ["under", "through", "along"], ttsContext: "He threw the ball over the fence." },
+                    { sentence: "The train sped ______ the fields.", correct: "through", distractors: ["across", "along", "to"], ttsContext: "The train sped through the fields." },
+                    { sentence: "The children ran ______ the playground.", correct: "around", distractors: ["across", "past", "to"], ttsContext: "The children ran around the playground." },
+                    { sentence: "We have to walk ______ the bridge to get there.", correct: "across", distractors: ["along", "past", "into"], ttsContext: "We have to walk across the bridge to get there." },
+                    { sentence: "I followed the path ______ the hillside.", correct: "along", distractors: ["across", "past", "over"], ttsContext: "I followed the path along the hillside." },
+                    { sentence: "The car drove straight ______ the intersection.", correct: "through", distractors: ["across", "past", "to"], ttsContext: "The car drove straight through the intersection." },
+                    { sentence: "The runner went straight ______ the finish line.", correct: "for", distractors: ["to", "at", "on"], ttsContext: "The runner went straight for the finish line." },
+                ]},
+                { sub: 3, name: "Advanced (up, down, toward, away from)", questions: [ // L3.3
+                    { sentence: "The price of oil went sharply ______ last month.", correct: "up", distractors: ["down", "toward", "away from"], ttsContext: "The price of oil went sharply up last month." },
+                    { sentence: "Please move ______ the fire exit.", correct: "away from", distractors: ["toward", "up", "down"], ttsContext: "Please move away from the fire exit." },
+                    { sentence: "We walked slowly ______ the sound of the music.", correct: "toward", distractors: ["away from", "up", "down"], ttsContext: "We walked slowly toward the sound of the music." },
+                    { sentence: "Tears rolled ______ her face.", correct: "down", distractors: ["up", "toward", "from"], ttsContext: "Tears rolled down her face." },
+                    { sentence: "The dog swam ______ the boat.", correct: "toward", distractors: ["away from", "up", "down"], ttsContext: "The dog swam toward the boat." },
+                    { sentence: "He looked ______ the ceiling with a confused expression.", correct: "up at", distractors: ["down at", "toward", "away from"], ttsContext: "He looked up at the ceiling with a confused expression." },
+                    { sentence: "They are moving ______ the hustle and bustle of the city.", correct: "away from", distractors: ["toward", "up", "down"], ttsContext: "They are moving away from the hustle and bustle of the city." },
+                    { sentence: "The stream flows gently ______ the valley.", correct: "down", distractors: ["up", "toward", "away from"], ttsContext: "The stream flows gently down the valley." },
+                    { sentence: "The climber struggled ______ the steep slope.", correct: "up", distractors: ["down", "toward", "from"], ttsContext: "The climber struggled up the steep slope." },
+                    { sentence: "He glanced ______ the list to check the names.", correct: "down", distractors: ["up", "toward", "away from"], ttsContext: "He glanced down the list to check the names." },
+                ]},
+            ]},
+            // ========================================================================================
+            // TYPE 4: OTHER/COMPLEX (ความสัมพันธ์อื่น ๆ)
+            { type: 4, title: "4. OTHER (ความสัมพันธ์อื่น ๆ)", levels: [
+                { sub: 1, name: "Basic (of, with, for)", questions: [ // L4.1
+                    { sentence: "This is a picture ______ my family.", correct: "of", distractors: ["for", "with", "at"], ttsContext: "This is a picture of my family." },
+                    { sentence: "I wrote the letter ______ a pen.", correct: "with", distractors: ["by", "for", "to"], ttsContext: "I wrote the letter with a pen." },
+                    { sentence: "The cake was made ______ my mother.", correct: "by", distractors: ["with", "for", "of"], ttsContext: "The cake was made by my mother." },
+                    { sentence: "She is famous ______ her kindness.", correct: "for", distractors: ["of", "with", "at"], ttsContext: "She is famous for her kindness." },
+                    { sentence: "We talked ______ the new project.", correct: "about", distractors: ["to", "for", "with"], ttsContext: "We talked about the new project." },
+                    { sentence: "I need to look ______ my keys.", correct: "for", distractors: ["up", "at", "with"], ttsContext: "I need to look for my keys." },
+                    { sentence: "The room is full ______ people.", correct: "of", distractors: ["with", "for", "by"], ttsContext: "The room is full of people." },
+                    { sentence: "The flight was delayed ______ bad weather.", correct: "due to", distractors: ["for", "with", "about"], ttsContext: "The flight was delayed due to bad weather." },
+                    { sentence: "She traveled ______ plane.", correct: "by", distractors: ["with", "on", "in"], ttsContext: "She traveled by plane." },
+                    { sentence: "I'm interested ______ learning French.", correct: "in", distractors: ["on", "at", "for"], ttsContext: "I'm interested in learning French." },
+                ]},
+                { sub: 2, name: "Intermediate (according to, instead of)", questions: [ // L4.2
+                    { sentence: "______ the news, the flight has been cancelled.", correct: "according to", distractors: ["instead of", "despite", "with"], ttsContext: "According to the news, the flight has been cancelled." },
+                    { sentence: "He took a bus ______ a taxi to save money.", correct: "instead of", distractors: ["according to", "in spite of", "due to"], ttsContext: "He took a bus instead of a taxi to save money." },
+                    { sentence: "Everyone agreed ______ John.", correct: "except for", distractors: ["instead of", "according to", "due to"], ttsContext: "Everyone agreed except for John." },
+                    { sentence: "You must complete the task ______ yourself.", correct: "by", distractors: ["with", "for", "of"], ttsContext: "You must complete the task by yourself." },
+                    { sentence: "The committee is concerned ______ environmental issues.", correct: "about", distractors: ["for", "with", "of"], ttsContext: "The committee is concerned about environmental issues." },
+                    { sentence: "He apologized ______ being late.", correct: "for", distractors: ["about", "with", "by"], ttsContext: "He apologized for being late." },
+                    { sentence: "I'm going to the party ______ my best friend.", correct: "with", distractors: ["by", "for", "of"], ttsContext: "I'm going to the party with my best friend." },
+                    { sentence: "The report contains information ______ the recent changes.", correct: "about", distractors: ["for", "with", "by"], ttsContext: "The report contains information about the recent changes." },
+                    { sentence: "She decided to study medicine ______ becoming a lawyer.", correct: "instead of", distractors: ["according to", "due to", "in spite of"], ttsContext: "She decided to study medicine instead of becoming a lawyer." },
+                    { sentence: "The meeting will proceed ______ the board's decision.", correct: "according to", distractors: ["instead of", "despite", "with"], ttsContext: "The meeting will proceed according to the board's decision." },
+                ]},
+                { sub: 3, name: "Advanced (despite, in spite of, regarding)", questions: [ // L4.3
+                    { sentence: "______ the heavy rain, they still went hiking.", correct: "in spite of", distractors: ["despite", "owing to", "regarding"], ttsContext: "In spite of the heavy rain, they still went hiking." },
+                    { sentence: "______ his illness, he managed to attend the meeting.", correct: "despite", distractors: ["in spite of", "due to", "regarding"], ttsContext: "Despite his illness, he managed to attend the meeting." },
+                    { sentence: "The failure was entirely ______ a lack of preparation.", correct: "owing to", distractors: ["despite", "in spite of", "regarding"], ttsContext: "The failure was entirely owing to a lack of preparation." },
+                    { sentence: "We need more data ______ the sales figures.", correct: "regarding", distractors: ["despite", "owing to", "in spite of"], ttsContext: "We need more data regarding the sales figures." },
+                    { sentence: "The flight was delayed ______ mechanical problems.", correct: "due to", distractors: ["despite", "in spite of", "regarding"], ttsContext: "The flight was delayed due to mechanical problems." },
+                    { sentence: "The team won the game ______ a major setback.", correct: "despite", distractors: ["in spite of", "owing to", "according to"], ttsContext: "The team won the game despite a major setback." },
+                    { sentence: "I lost my job, ______ which I had to move.", correct: "owing to", distractors: ["despite", "in spite of", "regarding"], ttsContext: "I lost my job, owing to which I had to move." },
+                    { sentence: "I have some questions ______ your last email.", correct: "regarding", distractors: ["despite", "owing to", "in spite of"], ttsContext: "I have some questions regarding your last email." },
+                    { sentence: "______ all the warnings, he continued to gamble.", correct: "in spite of", distractors: ["despite", "due to", "according to"], ttsContext: "In spite of all the warnings, he continued to gamble." },
+                    { sentence: "The project was a success ______ the team's effort.", correct: "due to", distractors: ["despite", "in spite of", "regarding"], ttsContext: "The project was a success due to the team's effort." },
+                ]},
+            ]},
         ];
 
         const QUESTIONS_PER_LEVEL = 10;
@@ -310,37 +465,55 @@
         // TTS Setup
         const synth = window.speechSynthesis;
         let ttsUtterance = new SpeechSynthesisUtterance();
-        ttsUtterance.lang = 'en-US'; // กำหนดภาษาอังกฤษ
+        ttsUtterance.lang = 'en-US'; 
+        ttsUtterance.rate = 0.8; // แก้ไข: ลดความเร็วในการอ่าน
 
         // --- GAME STATE ---
-        let currentLevelData = null;
-        let currentQuizIndex = 0; // 0-9
+        let currentLevelData = null; // Stores the main type data
+        let currentSubLevel = null; // Stores the sub-level data (questions array)
+        let currentQuizIndex = 0; 
         let score = 0;
         let isAnswered = false;
         let currentQuestion = {};
-        let currentLevelQuestions = []; // Questions for the current round
-
+        let currentLevelQuestions = []; 
 
         // --- TTS FUNCTION ---
-        /** * ฟังก์ชันอ่านประโยคออกเสียง 
-         * @param {string} text - ประโยคที่ต้องการอ่าน
-         * @param {function} onEndCallback - ฟังก์ชันที่เรียกใช้เมื่ออ่านจบ
-         */
+        function setMaleVoice() {
+            const voices = synth.getVoices();
+            // Try to find a reliable male voice for US English, if available
+            const maleVoice = voices.find(
+                voice => voice.lang === 'en-US' && (voice.name.includes('Male') || voice.name.includes('Zira') || voice.name.includes('Google US English Male'))
+            );
+            
+            if (maleVoice) {
+                ttsUtterance.voice = maleVoice;
+            } else {
+                // Fallback to the default English voice
+            }
+        }
+
+        /** * ฟังก์ชันอ่านประโยคออกเสียง */
         function speakAnswer(text, onEndCallback) {
             if (synth.speaking) {
                 synth.cancel();
             }
             
             ttsUtterance.text = text;
-            
-            // ลบ Event Listener เก่าออกก่อน
             ttsUtterance.onend = null; 
 
             if (onEndCallback) {
                 ttsUtterance.onend = onEndCallback;
             }
             
-            synth.speak(ttsUtterance);
+            // Check if voices are loaded before speaking
+            if (synth.getVoices().length === 0) {
+                 synth.onvoiceschanged = () => {
+                    setMaleVoice();
+                    synth.speak(ttsUtterance);
+                };
+            } else {
+                synth.speak(ttsUtterance);
+            }
         }
         
 
@@ -355,35 +528,46 @@
 
         function createLevelButtons() {
             levelGridEl.innerHTML = '';
-            ALL_LEVEL_QUIZZES.forEach(data => {
-                const btn = document.createElement('button');
-                btn.className = 'level-btn';
-                btn.textContent = `Level ${data.level}`;
-                
-                const titleSpan = document.createElement('span');
-                titleSpan.className = 'level-btn-title';
-                titleSpan.textContent = data.title.split(': ')[1];
-                
-                btn.appendChild(titleSpan);
-                btn.setAttribute('data-level', data.level);
+            
+            LEVEL_DATA.forEach(typeData => {
+                typeData.levels.forEach(level => {
+                    const btn = document.createElement('button');
+                    btn.className = 'level-btn';
+                    
+                    // Display Text: "L1.1 Basic"
+                    btn.textContent = `L${typeData.type}.${level.sub} ${level.name.split('(')[0].trim()}`;
+                    
+                    const titleSpan = document.createElement('span');
+                    titleSpan.className = 'level-btn-title';
+                    titleSpan.textContent = `(${level.name.split('(')[1] || ''}`; // e.g. "(in, on, at)"
+                    
+                    const typeSpan = document.createElement('span');
+                    typeSpan.className = 'level-btn-type';
+                    typeSpan.textContent = typeData.title.split('. ')[1]; // e.g. "PLACE (ตำแหน่ง)"
 
-                // Disable Level 2 & 3 for V2
-                if (data.level !== 1) {
-                    btn.disabled = true;
-                    btn.style.opacity = '0.5';
-                    btn.style.cursor = 'not-allowed';
-                }
-                
-                btn.addEventListener('click', () => {
-                    startLevel(data.level);
+                    btn.prepend(typeSpan);
+                    btn.appendChild(titleSpan);
+
+                    btn.setAttribute('data-type', typeData.type);
+                    btn.setAttribute('data-sub', level.sub);
+
+                    // ตรวจสอบความครบถ้วนของคำถาม
+                    if (level.questions.length < QUESTIONS_PER_LEVEL) {
+                        // ไม่ควรเกิดแล้วใน V4 แต่เก็บโค้ดไว้หากต้องการเพิ่ม Level ใหม่
+                        titleSpan.textContent = "(ข้อมูลไม่ครบถ้วน)";
+                    }
+                    
+                    btn.addEventListener('click', () => {
+                        startLevel(typeData.type, level.sub);
+                    });
+                    levelGridEl.appendChild(btn);
                 });
-                levelGridEl.appendChild(btn);
             });
         }
 
         function updateStatusBar() {
-            if (currentLevelData) {
-                levelTitleEl.textContent = `${currentLevelData.title}`;
+            if (currentSubLevel) {
+                levelTitleEl.textContent = `${currentLevelData.title} | ${currentSubLevel.name.split('(')[0].trim()}`;
                 qCountEl.textContent = `ข้อ: ${currentQuizIndex + 1}/${currentLevelQuestions.length}`;
             }
             scoreEl.textContent = `คะแนน: ${score}`;
@@ -391,9 +575,12 @@
 
         // --- GAME LOGIC ---
 
-        function startLevel(levelId) {
-            currentLevelData = ALL_LEVEL_QUIZZES.find(data => data.level === levelId);
-            currentLevelQuestions = [...currentLevelData.questions].sort(() => 0.5 - Math.random());
+        function startLevel(typeId, subId) {
+            currentLevelData = LEVEL_DATA.find(data => data.type === typeId);
+            currentSubLevel = currentLevelData.levels.find(level => level.sub === subId);
+            
+            // ใช้คำถามจาก Sub-Level ที่เลือกมาสุ่ม
+            currentLevelQuestions = [...currentSubLevel.questions].sort(() => 0.5 - Math.random());
             currentQuizIndex = 0;
             score = 0; 
             showScreen('game-screen');
@@ -411,9 +598,8 @@
             nextBtn.disabled = true;
             feedbackMessageEl.textContent = 'เลือกคำตอบที่ถูกต้อง';
             feedbackMessageEl.style.color = 'var(--color-text-dark)';
-            questionSentenceEl.innerHTML = '';
+            questionSentenceEl.innerHTML = ''; 
 
-            // Reset UI
             optionsArea.innerHTML = ''; 
             
             updateStatusBar();
@@ -426,7 +612,8 @@
             
             options = [...options, ...distractors];
 
-            const commonPrepositions = ["in", "on", "at", "to", "for", "with", "by", "from"];
+            // Common prepositions list for random fillers
+            const commonPrepositions = ["in", "on", "at", "to", "for", "with", "by", "from", "of"];
             
             const uniqueOptions = new Set(options);
 
@@ -435,7 +622,8 @@
                     uniqueOptions.add(prep);
                 }
             }
-
+            
+            // Fallback: use other correct answers from the same sub-level as distractors
             if (uniqueOptions.size < OPTIONS_COUNT) {
                  for (const q of currentLevelQuestions) {
                     if (uniqueOptions.size >= OPTIONS_COUNT) break;
@@ -549,7 +737,7 @@
                 synth.cancel();
             }
 
-            levelTitleEl.textContent = `จบ Level ${currentLevelData.level}!`;
+            levelTitleEl.textContent = `จบ Level ${currentLevelData.type}.${currentSubLevel.sub}!`;
             qCountEl.textContent = '';
             
             const totalQuestions = currentLevelQuestions.length;
@@ -557,7 +745,7 @@
                 <span style="font-size:2rem; font-weight:900; color:var(--color-primary);">
                     คุณทำได้ ${score}/${totalQuestions} ข้อ
                 </span>
-                <p>ยินดีด้วย! ลองกลับไปฝึกฝนใหม่ หรือรอ Level ถัดไป</p>
+                <p>ยินดีด้วย! ลองกลับไปฝึกฝนใหม่ หรือลองระดับอื่น ๆ</p>
             `;
             feedbackMessageEl.style.color = 'var(--color-primary)';
             
@@ -591,6 +779,10 @@
 
         // --- INITIAL SETUP ---
         document.addEventListener('DOMContentLoaded', () => {
+            // Set up male voice preference when voices are loaded
+            synth.onvoiceschanged = setMaleVoice; 
+            setMaleVoice(); // Try to set it immediately
+
             createLevelButtons();
             showScreen('level-select-screen');
         });
