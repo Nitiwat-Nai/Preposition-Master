@@ -1,0 +1,561 @@
+﻿<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Preposition Master - เกมข้อสอบคำบุพบท</title>
+    <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@400;700;900&display=swap" rel="stylesheet">
+
+    <style>
+        /* --- Mobile-First CSS with New Color Theme (Purple/Pink/Teal) --- */
+        :root {
+            --color-primary: #9C27B0; /* Deep Purple (ปุ่ม Next) */
+            --color-secondary: #E1BEE7; /* Light Lavender (ขอบปุ่มตัวเลือก) */
+            --color-correct: #00BCD4; /* Cyan/Teal (สีถูก) */
+            --color-wrong: #FF5252; /* Bright Red (สีผิด) */
+            --color-bg: #F3E5F5; /* Very Light Purple/Pink (พื้นหลัง) */
+            --color-card: #FFFFFF; /* White (สำหรับ Header/ส่วนข้อมูล) */
+            --color-button-bg: #FCE4EC; /* Light Pink (พื้นหลังปุ่มตัวเลือก) */
+            --color-text-dark: #333333;
+            --color-text-light: #FFFFFF;
+        }
+
+        body {
+            font-family: 'Sarabun', sans-serif;
+            background-color: var(--color-bg);
+            color: var(--color-text-dark);
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            text-align: center;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 500px;
+            box-sizing: border-box;
+            background-color: var(--color-card);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            padding: 0;
+        }
+
+        /* Header */
+        header {
+            background-color: var(--color-primary);
+            color: var(--color-text-light);
+            padding: 1.5rem 1rem;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+        }
+        header h1 {
+            font-size: 1.8rem;
+            margin: 0;
+        }
+
+        /* Screen Management */
+        .screen {
+            padding: 1rem;
+            display: none; 
+            flex-grow: 1;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+        .screen.active {
+            display: flex;
+        }
+
+        /* --- Level Selection Screen --- */
+        #level-select-screen .level-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            padding: 1rem 0;
+        }
+        .level-btn {
+            background-color: #673AB7; 
+            color: var(--color-text-light);
+            border: none;
+            padding: 1.5rem 0.5rem;
+            border-radius: 12px;
+            font-size: 1.4rem;
+            font-weight: bold;
+            cursor: pointer;
+            box-shadow: 0 4px 0 #5E35B1;
+            transition: transform 0.1s, box-shadow 0.1s;
+        }
+        .level-btn:active {
+            transform: translateY(2px);
+            box-shadow: 0 2px 0 #5E35B1;
+        }
+        .level-btn-title {
+            font-size: 0.8rem;
+            font-weight: 400;
+            display: block;
+            margin-top: 5px;
+        }
+
+        /* --- Game Screen --- */
+        #game-screen {
+            min-height: calc(100vh - 8rem);
+            justify-content: flex-start;
+        }
+        #game-screen .top-content {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        #game-screen .status-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.5rem 0;
+            font-weight: bold;
+            margin-bottom: 1.5rem;
+            color: #4A148C; 
+        }
+
+        /* Prompt Area (Question Sentence) */
+        #prompt-area {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 2rem;
+            min-height: 100px;
+            padding: 0 10px; 
+        }
+        #question-sentence {
+            font-size: 1.3rem;
+            font-weight: bold;
+            line-height: 1.5;
+            text-align: left;
+            padding: 10px;
+            background-color: #f7f7f7;
+            border-radius: 8px;
+            width: 100%;
+            box-sizing: border-box;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+        .blank {
+            color: var(--color-primary);
+            text-decoration: underline;
+            padding: 0 5px;
+        }
+        
+        /* Choices Area (4-button Grid) - Adapted for Prepositions */
+        #options-area {
+            display: grid;
+            grid-template-columns: 1fr 1fr; 
+            gap: 15px;
+            flex-grow: 1;
+            padding-bottom: 1rem;
+        }
+        .option-btn {
+            background-color: var(--color-button-bg);
+            border: 3px solid var(--color-secondary); 
+            border-radius: 12px; 
+            padding: 15px 10px;
+            cursor: pointer;
+            transition: all 0.2s;
+            box-sizing: border-box;
+            
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 1.5em; /* Bigger font for single preposition words */
+            font-weight: bold;
+            color: var(--color-text-dark);
+        }
+
+        .option-btn:hover, .option-btn:focus {
+            border-color: var(--color-primary); 
+        }
+        
+        /* Feedback Colors */
+        .option-btn.correct {
+            border-color: var(--color-correct) !important; 
+            box-shadow: 0 0 15px #4DD0E1; 
+            background-color: #E0F7FA; 
+            transform: scale(1.02);
+        }
+        .option-btn.incorrect {
+            border-color: var(--color-wrong) !important; 
+            animation: shake 0.5s;
+            background-color: #FFEBEE; 
+        }
+        @keyframes shake {
+            0%, 100% {transform: translateX(0);}
+            20%, 60% {transform: translateX(-5px);}
+            40%, 80% {transform: translateX(5px);}
+        }
+
+        /* Footer/Control */
+        #game-footer {
+            margin-top: 1.5rem;
+            padding-top: 1rem;
+            border-top: 1px solid #ECEFF1;
+            flex-shrink: 0; 
+        }
+        #next-btn {
+            background-color: var(--color-primary);
+            color: var(--color-text-light);
+            border: none;
+            width: 100%;
+            padding: 1rem;
+            border-radius: 50px;
+            font-size: 1.2rem;
+            font-weight: bold;
+            cursor: pointer;
+            box-shadow: 0 4px 0 #7B1FA2;
+            transition: all 0.1s;
+        }
+        #next-btn:active {
+            transform: translateY(2px);
+            box-shadow: 0 2px 0 #7B1FA2;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <header>
+            <h1>Preposition Master</h1>
+        </header>
+
+        <div id="level-select-screen" class="screen active">
+            <h2>🎯 เกมข้อสอบคำบุพบท</h2>
+            <p>เลือกชุดคำบุพบทที่คุณต้องการฝึกฝน (Level ละ 10 ข้อ):</p>
+            <div class="level-grid" id="level-grid">
+                </div>
+            <p style="padding-top: 2rem; color:#9E9E9E;">มีทั้งหมด 3 Levels (กำลังพัฒนา)</p>
+        </div>
+
+        <div id="game-screen" class="screen">
+            <div class="top-content">
+                <div class="status-bar">
+                    <span id="level-title"></span>
+                    <span id="q-count">ข้อ: 0/10</span>
+                    <span id="score">คะแนน: 0</span>
+                </div>
+
+                <div id="prompt-area">
+                    <div id="question-sentence"></div>
+                    <div id="feedback-message" style="margin-top:20px; font-weight:bold; color:var(--color-text-dark);">เลือกคำตอบที่ถูกต้อง</div>
+                </div>
+
+                <div id="options-area">
+                    </div>
+            </div>
+
+            <div id="game-footer">
+                <button id="next-btn" disabled>ข้อถัดไป</button>
+            </div>
+        </div>
+    </div>
+
+    <audio id="correct-audio" src="sounds/correct.mp3"></audio>
+    <audio id="incorrect-audio" src="sounds/incorrect.mp3"></audio>
+
+    <script>
+        /* ------------------- JavaScript Core Logic (Preposition Master) ------------------- */
+
+        // --- DATA (Level 1: Basic Place & Time) ---
+        // คำถามประกอบด้วย: sentence (ประโยค), correct (คำบุพบทที่ถูก), distractors (ตัวหลอกเพิ่มเติม)
+        const ALL_LEVEL_QUIZZES = [
+            // LEVEL 1: Basic Place & Time (in, on, at, under, behind)
+            { level: 1, title: "Level 1: ตำแหน่งและเวลาพื้นฐาน", questions: [
+                { sentence: "The book is ______ the table.", correct: "on", distractors: ["in", "at"] },
+                { sentence: "She lives ______ Bangkok.", correct: "in", distractors: ["on", "at"] },
+                { sentence: "The movie starts ______ 7 PM.", correct: "at", distractors: ["in", "on"] },
+                { sentence: "My birthday is ______ January.", correct: "in", distractors: ["on", "at"] },
+                { sentence: "We went to the beach ______ Sunday.", correct: "on", distractors: ["in", "at"] },
+                { sentence: "The cat is hiding ______ the sofa.", correct: "under", distractors: ["over", "at"] },
+                { sentence: "I saw him standing ______ the door.", correct: "at", distractors: ["in", "on"] },
+                { sentence: "The keys are ______ my pocket.", correct: "in", distractors: ["on", "at"] },
+                { sentence: "The lamp is ______ the picture.", correct: "above", distractors: ["under", "in"] },
+                { sentence: "The dog is walking ______ me.", correct: "behind", distractors: ["in front of", "on"] },
+            ]},
+            // LEVEL 2 และ 3 สามารถเพิ่มภายหลังได้
+            { level: 2, title: "Level 2: การเคลื่อนที่และกริยาวลี (กำลังพัฒนา)", questions: []},
+            { level: 3, title: "Level 3: คำบุพบทซับซ้อน (กำลังพัฒนา)", questions: []},
+        ];
+
+        const QUESTIONS_PER_LEVEL = 10;
+        const OPTIONS_COUNT = 4;
+
+        // --- ELEMENTS ---
+        const levelSelectScreen = document.getElementById('level-select-screen');
+        const gameScreen = document.getElementById('game-screen');
+        const levelGridEl = document.getElementById('level-grid');
+
+        const levelTitleEl = document.getElementById('level-title');
+        const qCountEl = document.getElementById('q-count');
+        const scoreEl = document.getElementById('score');
+        // const audioButton = document.getElementById('audio-button'); // Removed
+        const questionSentenceEl = document.getElementById('question-sentence'); // New Element
+        const feedbackMessageEl = document.getElementById('feedback-message');
+        const optionsArea = document.getElementById('options-area');
+        const nextBtn = document.getElementById('next-btn');
+        
+        const correctAudio = document.getElementById('correct-audio');
+        const incorrectAudio = document.getElementById('incorrect-audio');
+
+
+        // --- GAME STATE ---
+        let currentLevelData = null;
+        let currentQuizIndex = 0; // 0-9
+        let score = 0;
+        let isAnswered = false;
+        let currentQuestion = {};
+        let currentLevelQuestions = []; // Questions for the current round
+
+
+        // --- UI & SCREEN MANAGEMENT ---
+
+        function showScreen(id) {
+            document.querySelectorAll('.screen').forEach(screen => {
+                screen.classList.remove('active');
+            });
+            document.getElementById(id).classList.add('active');
+        }
+
+        function createLevelButtons() {
+            levelGridEl.innerHTML = '';
+            ALL_LEVEL_QUIZZES.forEach(data => {
+                const btn = document.createElement('button');
+                btn.className = 'level-btn';
+                btn.textContent = `Level ${data.level}`;
+                
+                const titleSpan = document.createElement('span');
+                titleSpan.className = 'level-btn-title';
+                titleSpan.textContent = data.title.split(': ')[1]; // เอาเฉพาะชื่อหัวข้อ
+                
+                btn.appendChild(titleSpan);
+                btn.setAttribute('data-level', data.level);
+
+                // Disable Level 2 & 3 for V1
+                if (data.level !== 1) {
+                    btn.disabled = true;
+                    btn.style.opacity = '0.5';
+                    btn.style.cursor = 'not-allowed';
+                }
+                
+                btn.addEventListener('click', () => {
+                    startLevel(data.level);
+                });
+                levelGridEl.appendChild(btn);
+            });
+        }
+
+        function updateStatusBar() {
+            if (currentLevelData) {
+                levelTitleEl.textContent = `${currentLevelData.title}`;
+                qCountEl.textContent = `ข้อ: ${currentQuizIndex + 1}/${currentLevelQuestions.length}`;
+            }
+            scoreEl.textContent = `คะแนน: ${score}`;
+        }
+
+        // --- GAME LOGIC ---
+
+        function startLevel(levelId) {
+            currentLevelData = ALL_LEVEL_QUIZZES.find(data => data.level === levelId);
+            currentLevelQuestions = [...currentLevelData.questions].sort(() => 0.5 - Math.random()); // สุ่มคำถาม
+            currentQuizIndex = 0;
+            score = 0; 
+            showScreen('game-screen');
+            nextQuestion();
+        }
+
+        function nextQuestion() {
+            if (currentQuizIndex >= currentLevelQuestions.length) {
+                endGame();
+                return;
+            }
+            
+            isAnswered = false;
+            nextBtn.textContent = 'ข้อถัดไป';
+            nextBtn.disabled = true;
+            feedbackMessageEl.textContent = 'เลือกคำตอบที่ถูกต้อง';
+            feedbackMessageEl.style.color = 'var(--color-text-dark)';
+            questionSentenceEl.innerHTML = ''; // Reset question text
+
+            // Reset UI
+            optionsArea.innerHTML = ''; 
+            
+            updateStatusBar();
+            setupQuestion();
+        }
+
+        /** ฟังก์ชันสร้างตัวเลือกคำบุพบท 4 ตัว */
+        function getPrepositionOptions(correctPreposition, distractors) {
+            let options = [correctPreposition];
+            
+            // 1. นำตัวหลอกเฉพาะของข้อนั้นๆ เข้ามารวม
+            options = [...options, ...distractors];
+
+            // 2. สร้างตัวหลอกเพิ่ม (ถ้าไม่ถึง 4) จาก Preposition ที่ใช้บ่อยอื่นๆ
+            const commonPrepositions = ["in", "on", "at", "to", "for", "with", "by", "from"];
+            
+            const uniqueOptions = new Set(options);
+
+            // เพิ่มตัวหลอกที่ไม่ซ้ำจนกว่าจะได้ครบ 4 ตัว
+            for (const prep of commonPrepositions) {
+                if (uniqueOptions.size < OPTIONS_COUNT && !uniqueOptions.has(prep)) {
+                    uniqueOptions.add(prep);
+                }
+            }
+
+            // ถ้ายังไม่ครบ 4 ตัว อาจใช้ตัวหลอกจากข้ออื่นใน Level เดียวกัน (ตัวเลือกเสริม)
+            if (uniqueOptions.size < OPTIONS_COUNT) {
+                 for (const q of currentLevelQuestions) {
+                    if (uniqueOptions.size >= OPTIONS_COUNT) break;
+                    if (!uniqueOptions.has(q.correct)) {
+                        uniqueOptions.add(q.correct);
+                    }
+                }
+            }
+            
+            const finalOptions = Array.from(uniqueOptions);
+            
+            // สุ่มลำดับ
+            finalOptions.sort(() => Math.random() - 0.5); 
+            
+            return finalOptions.slice(0, OPTIONS_COUNT);
+        }
+
+
+        function setupQuestion() {
+            currentQuestion = currentLevelQuestions[currentQuizIndex];
+            
+            // 1. แสดงประโยคคำถาม โดยใช้ span class="blank" แทนช่องว่าง ______
+            const formattedSentence = currentQuestion.sentence.replace('______', '<span class="blank">______</span>');
+            questionSentenceEl.innerHTML = formattedSentence;
+
+            // 2. สร้างตัวเลือก 4 ตัว
+            const options = getPrepositionOptions(currentQuestion.correct, currentQuestion.distractors || []);
+            
+            // 3. สร้างปุ่มตัวเลือก
+            options.forEach(prep => {
+                const button = document.createElement('button');
+                button.className = 'option-btn';
+                button.dataset.preposition = prep;
+                button.dataset.isCorrect = prep === currentQuestion.correct;
+                
+                button.textContent = prep.toUpperCase(); 
+                
+                button.addEventListener('click', handleAnswer);
+                optionsArea.appendChild(button);
+            });
+        }
+
+        function handleAnswer(event) {
+            if (isAnswered) return;
+            isAnswered = true;
+            
+            const selectedButton = event.currentTarget;
+            const selectedPreposition = selectedButton.dataset.preposition;
+            const isCorrect = selectedButton.dataset.isCorrect === 'true';
+
+            // 1. Disable all choices
+            document.querySelectorAll('.option-btn').forEach(btn => {
+                btn.removeEventListener('click', handleAnswer);
+                btn.disabled = true;
+            });
+
+            // 2. Feedback
+            if (isCorrect) {
+                correctAudio.currentTime = 0;
+                correctAudio.play();
+                score++;
+                selectedButton.classList.add('correct');
+                
+                // แทนที่ช่องว่างด้วยคำตอบที่ถูกและเน้นสี
+                questionSentenceEl.innerHTML = currentQuestion.sentence.replace(
+                    '______', 
+                    `<span style="color:var(--color-correct); font-weight:900;">${selectedPreposition.toUpperCase()}</span>`
+                );
+
+                feedbackMessageEl.textContent = `✅ ถูกต้อง! (${selectedPreposition.toUpperCase()})`;
+                feedbackMessageEl.style.color = 'var(--color-correct)';
+
+            } else {
+                incorrectAudio.currentTime = 0;
+                incorrectAudio.play();
+                selectedButton.classList.add('incorrect');
+                
+                const correctPrep = currentQuestion.correct;
+                
+                // แทนที่ช่องว่างด้วยคำตอบที่ถูกและเน้นสี
+                questionSentenceEl.innerHTML = currentQuestion.sentence.replace(
+                    '______', 
+                    `<span style="color:var(--color-wrong); font-weight:900;">${selectedPreposition.toUpperCase()}</span>`
+                );
+
+
+                feedbackMessageEl.textContent = `❌ ผิด! คำตอบที่ถูกคือ ${correctPrep.toUpperCase()}`;
+                feedbackMessageEl.style.color = 'var(--color-wrong)';
+                
+                // Highlight the correct answer button
+                const correctAnswerButton = document.querySelector(`.option-btn[data-is-correct="true"]`);
+                if (correctAnswerButton) {
+                    correctAnswerButton.classList.add('correct');
+                }
+            }
+            
+            // 3. Update status and enable next button
+            updateStatusBar();
+            nextBtn.disabled = false;
+        }
+
+
+        function endGame() {
+            levelTitleEl.textContent = `จบ Level ${currentLevelData.level}!`;
+            qCountEl.textContent = '';
+            
+            const totalQuestions = currentLevelQuestions.length;
+            feedbackMessageEl.innerHTML = `
+                <span style="font-size:2rem; font-weight:900; color:var(--color-primary);">
+                    คุณทำได้ ${score}/${totalQuestions} ข้อ
+                </span>
+                <p>ยินดีด้วย! ลองกลับไปฝึกฝนใหม่ หรือรอ Level ถัดไป</p>
+            `;
+            feedbackMessageEl.style.color = 'var(--color-primary)';
+            
+            optionsArea.innerHTML = ''; 
+            questionSentenceEl.innerHTML = '✨ สรุปผล ✨';
+
+            nextBtn.textContent = 'กลับหน้าหลัก';
+            nextBtn.disabled = false;
+        }
+
+        // --- EVENT LISTENERS ---
+        
+        // Next/Go Back button
+        nextBtn.addEventListener('click', () => {
+            if (currentQuizIndex >= currentLevelQuestions.length) {
+                // Back to Level Selection
+                showScreen('level-select-screen');
+                currentQuizIndex = 0; 
+            } else {
+                // Next Question
+                currentQuizIndex++;
+                nextQuestion();
+            }
+        });
+
+
+        // --- INITIAL SETUP ---
+        document.addEventListener('DOMContentLoaded', () => {
+            createLevelButtons();
+            showScreen('level-select-screen');
+        });
+    </script>
+</body>
+</html>
