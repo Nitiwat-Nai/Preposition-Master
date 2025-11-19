@@ -287,7 +287,7 @@
     <audio id="incorrect-audio" src="sounds/incorrect.mp3"></audio>
 
     <script>
-        /* ------------------- JavaScript Core Logic (Preposition Master V5) ------------------- */
+        /* ------------------- JavaScript Core Logic (Preposition Master V5.1) ------------------- */
 
         // --- DATA (4 Main Types x 3 Sub-Levels = 12 Levels Total) ---
         const LEVEL_DATA = [
@@ -468,7 +468,7 @@
         const feedbackMessageEl = document.getElementById('feedback-message');
         const optionsArea = document.getElementById('options-area');
         const nextBtn = document.getElementById('next-btn');
-        const headerTitleEl = document.querySelector('header h1'); // สำหรับโหมดลับ
+        const headerTitleEl = document.querySelector('header h1'); 
         
         const correctAudio = document.getElementById('correct-audio');
         const incorrectAudio = document.getElementById('incorrect-audio');
@@ -477,7 +477,7 @@
         const synth = window.speechSynthesis;
         let ttsUtterance = new SpeechSynthesisUtterance();
         ttsUtterance.lang = 'en-US'; 
-        ttsUtterance.rate = 0.8; // ความเร็วในการอ่าน (80% ของความเร็วปกติ)
+        ttsUtterance.rate = 0.8; 
 
         // --- GAME STATE ---
         let currentLevelData = null; 
@@ -492,7 +492,6 @@
         // --- TTS FUNCTION ---
         function setMaleVoice() {
             const voices = synth.getVoices();
-            // Try to find a reliable male voice for US English, if available
             const maleVoice = voices.find(
                 voice => voice.lang === 'en-US' && (voice.name.includes('Male') || voice.name.includes('Zira') || voice.name.includes('Google US English Male'))
             );
@@ -500,7 +499,7 @@
             if (maleVoice) {
                 ttsUtterance.voice = maleVoice;
             } else {
-                // Fallback to the default English voice
+                // Fallback 
             }
         }
 
@@ -517,7 +516,6 @@
                 ttsUtterance.onend = onEndCallback;
             }
             
-            // Check if voices are loaded before speaking (safety check)
             if (synth.getVoices().length === 0) {
                  synth.onvoiceschanged = () => {
                     setMaleVoice();
@@ -536,7 +534,7 @@
                 console.log('Secret Auto Mode ACTIVATED');
                 // หากอยู่ในหน้าเกมเพลย์ ให้เริ่มตอบอัตโนมัติ
                 if (gameScreen.classList.contains('active') && !isAnswered) {
-                    autoAnswer(1500); 
+                    autoAnswer(2000); // หน่วง 2 วินาที
                 }
             } else {
                 headerTitleEl.classList.remove('auto-active');
@@ -549,7 +547,7 @@
         }
 
         /** ฟังก์ชันสำหรับโหมดลับ: เลือกคำตอบที่ถูกต้องโดยอัตโนมัติ */
-        function autoAnswer(delay = 1500) {
+        function autoAnswer(delay = 2000) { // แก้ไขค่าดีฟอลต์เป็น 2000 ms (2 วินาที)
             if (!isAutoModeActive || isAnswered) return;
             
             setTimeout(() => {
@@ -562,7 +560,6 @@
                     // จำลองการคลิกปุ่มคำตอบที่ถูกต้อง
                     correctButton.click(); 
                 } 
-                // หากหาปุ่มไม่เจอ จะไม่ทำอะไรต่อ ปล่อยให้ผู้เล่นคลิกเอง หรือรอจบเกม
             }, delay);
         }
 
@@ -711,7 +708,8 @@
 
             // NEW: ถ้าโหมดลับทำงาน ให้เริ่มตอบอัตโนมัติ
             if (isAutoModeActive) {
-                autoAnswer(1500); // หน่วง 1.5 วินาที ก่อนตอบข้อแรก
+                // *** แก้ไขจาก 1500ms เป็น 2000ms ตามที่ผู้ใช้ต้องการ ***
+                autoAnswer(2000); 
             }
         }
 
