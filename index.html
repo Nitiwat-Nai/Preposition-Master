@@ -57,6 +57,18 @@
         header h1 {
             font-size: 1.8rem;
             margin: 0;
+            /* เพิ่ม transition เพื่อให้แอนิเมชันดูนุ่มนวล */
+            transition: transform 0.3s; 
+            cursor: pointer; /* เพื่อบอกใบ้ว่าสามารถคลิกได้ */
+        }
+
+        /* --- Secret Mode Animation --- */
+        @keyframes slowBounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-4px); } /* Gentle lift */
+        }
+        .auto-active {
+            animation: slowBounce 2s infinite ease-in-out; 
         }
 
         /* Screen Management */
@@ -73,7 +85,6 @@
 
         /* --- Level Selection Screen --- */
         #level-select-screen .level-grid {
-            /* ปรับเป็น Grid 2 คอลัมน์สำหรับ Level ที่เยอะขึ้น */
             display: grid;
             grid-template-columns: 1fr 1fr;
             gap: 15px;
@@ -83,7 +94,7 @@
             background-color: #673AB7; 
             color: var(--color-text-light);
             border: none;
-            padding: 1.2rem 0.5rem; /* ลด padding เพื่อให้มีพื้นที่มากขึ้น */
+            padding: 1.2rem 0.5rem; 
             border-radius: 12px;
             font-size: 1.1rem;
             font-weight: bold;
@@ -139,12 +150,11 @@
             flex-direction: column;
             justify-content: center;
             align-items: center;
-            margin-bottom: 1.5rem; /* ลด margin */
+            margin-bottom: 1.5rem; 
             min-height: 100px;
             padding: 0 10px; 
         }
         #question-sentence {
-            /* แก้ไข: เพิ่มขนาดตัวอักษรของโจทย์ */
             font-size: 1.6rem; 
             font-weight: bold;
             line-height: 1.5;
@@ -174,7 +184,7 @@
             background-color: var(--color-button-bg);
             border: 3px solid var(--color-secondary); 
             border-radius: 12px; 
-            padding: 10px 10px; /* แก้ไข: ลดความสูงของปุ่ม */
+            padding: 10px 10px; 
             cursor: pointer;
             transition: all 0.2s;
             box-sizing: border-box;
@@ -277,7 +287,7 @@
     <audio id="incorrect-audio" src="sounds/incorrect.mp3"></audio>
 
     <script>
-        /* ------------------- JavaScript Core Logic (Preposition Master V4) ------------------- */
+        /* ------------------- JavaScript Core Logic (Preposition Master V5) ------------------- */
 
         // --- DATA (4 Main Types x 3 Sub-Levels = 12 Levels Total) ---
         const LEVEL_DATA = [
@@ -458,6 +468,7 @@
         const feedbackMessageEl = document.getElementById('feedback-message');
         const optionsArea = document.getElementById('options-area');
         const nextBtn = document.getElementById('next-btn');
+        const headerTitleEl = document.querySelector('header h1'); // สำหรับโหมดลับ
         
         const correctAudio = document.getElementById('correct-audio');
         const incorrectAudio = document.getElementById('incorrect-audio');
@@ -466,16 +477,17 @@
         const synth = window.speechSynthesis;
         let ttsUtterance = new SpeechSynthesisUtterance();
         ttsUtterance.lang = 'en-US'; 
-        ttsUtterance.rate = 0.8; // แก้ไข: ลดความเร็วในการอ่าน
+        ttsUtterance.rate = 0.8; // ความเร็วในการอ่าน (80% ของความเร็วปกติ)
 
         // --- GAME STATE ---
-        let currentLevelData = null; // Stores the main type data
-        let currentSubLevel = null; // Stores the sub-level data (questions array)
+        let currentLevelData = null; 
+        let currentSubLevel = null; 
         let currentQuizIndex = 0; 
         let score = 0;
         let isAnswered = false;
         let currentQuestion = {};
         let currentLevelQuestions = []; 
+        let isAutoModeActive = false; // ตัวแปรสำหรับโหมดลับ
 
         // --- TTS FUNCTION ---
         function setMaleVoice() {
@@ -505,7 +517,7 @@
                 ttsUtterance.onend = onEndCallback;
             }
             
-            // Check if voices are loaded before speaking
+            // Check if voices are loaded before speaking (safety check)
             if (synth.getVoices().length === 0) {
                  synth.onvoiceschanged = () => {
                     setMaleVoice();
@@ -516,6 +528,43 @@
             }
         }
         
+        // --- SECRET MODE LOGIC ---
+        function toggleAutoMode() {
+            isAutoModeActive = !isAutoModeActive;
+            if (isAutoModeActive) {
+                headerTitleEl.classList.add('auto-active');
+                console.log('Secret Auto Mode ACTIVATED');
+                // หากอยู่ในหน้าเกมเพลย์ ให้เริ่มตอบอัตโนมัติ
+                if (gameScreen.classList.contains('active') && !isAnswered) {
+                    autoAnswer(1500); 
+                }
+            } else {
+                headerTitleEl.classList.remove('auto-active');
+                console.log('Secret Auto Mode DEACTIVATED');
+            }
+            // หยุดการอ่านเสียงทันทีเมื่อเปลี่ยนโหมด
+            if (synth.speaking) {
+                synth.cancel();
+            }
+        }
+
+        /** ฟังก์ชันสำหรับโหมดลับ: เลือกคำตอบที่ถูกต้องโดยอัตโนมัติ */
+        function autoAnswer(delay = 1500) {
+            if (!isAutoModeActive || isAnswered) return;
+            
+            setTimeout(() => {
+                if (!isAutoModeActive || isAnswered) return; 
+
+                // หาปุ่มคำตอบที่ถูกต้อง
+                const correctButton = document.querySelector(`.option-btn[data-is-correct="true"]`);
+                
+                if (correctButton) {
+                    // จำลองการคลิกปุ่มคำตอบที่ถูกต้อง
+                    correctButton.click(); 
+                } 
+                // หากหาปุ่มไม่เจอ จะไม่ทำอะไรต่อ ปล่อยให้ผู้เล่นคลิกเอง หรือรอจบเกม
+            }, delay);
+        }
 
         // --- UI & SCREEN MANAGEMENT ---
 
@@ -534,16 +583,15 @@
                     const btn = document.createElement('button');
                     btn.className = 'level-btn';
                     
-                    // Display Text: "L1.1 Basic"
                     btn.textContent = `L${typeData.type}.${level.sub} ${level.name.split('(')[0].trim()}`;
                     
                     const titleSpan = document.createElement('span');
                     titleSpan.className = 'level-btn-title';
-                    titleSpan.textContent = `(${level.name.split('(')[1] || ''}`; // e.g. "(in, on, at)"
+                    titleSpan.textContent = `(${level.name.split('(')[1] || ''}`; 
                     
                     const typeSpan = document.createElement('span');
                     typeSpan.className = 'level-btn-type';
-                    typeSpan.textContent = typeData.title.split('. ')[1]; // e.g. "PLACE (ตำแหน่ง)"
+                    typeSpan.textContent = typeData.title.split('. ')[1]; 
 
                     btn.prepend(typeSpan);
                     btn.appendChild(titleSpan);
@@ -551,9 +599,10 @@
                     btn.setAttribute('data-type', typeData.type);
                     btn.setAttribute('data-sub', level.sub);
 
-                    // ตรวจสอบความครบถ้วนของคำถาม
                     if (level.questions.length < QUESTIONS_PER_LEVEL) {
-                        // ไม่ควรเกิดแล้วใน V4 แต่เก็บโค้ดไว้หากต้องการเพิ่ม Level ใหม่
+                        btn.disabled = true;
+                        btn.style.opacity = '0.5';
+                        btn.style.cursor = 'not-allowed';
                         titleSpan.textContent = "(ข้อมูลไม่ครบถ้วน)";
                     }
                     
@@ -579,7 +628,6 @@
             currentLevelData = LEVEL_DATA.find(data => data.type === typeId);
             currentSubLevel = currentLevelData.levels.find(level => level.sub === subId);
             
-            // ใช้คำถามจาก Sub-Level ที่เลือกมาสุ่ม
             currentLevelQuestions = [...currentSubLevel.questions].sort(() => 0.5 - Math.random());
             currentQuizIndex = 0;
             score = 0; 
@@ -612,7 +660,6 @@
             
             options = [...options, ...distractors];
 
-            // Common prepositions list for random fillers
             const commonPrepositions = ["in", "on", "at", "to", "for", "with", "by", "from", "of"];
             
             const uniqueOptions = new Set(options);
@@ -623,7 +670,6 @@
                 }
             }
             
-            // Fallback: use other correct answers from the same sub-level as distractors
             if (uniqueOptions.size < OPTIONS_COUNT) {
                  for (const q of currentLevelQuestions) {
                     if (uniqueOptions.size >= OPTIONS_COUNT) break;
@@ -662,13 +708,19 @@
                 button.addEventListener('click', handleAnswer);
                 optionsArea.appendChild(button);
             });
+
+            // NEW: ถ้าโหมดลับทำงาน ให้เริ่มตอบอัตโนมัติ
+            if (isAutoModeActive) {
+                autoAnswer(1500); // หน่วง 1.5 วินาที ก่อนตอบข้อแรก
+            }
         }
 
         function handleAnswer(event) {
             if (isAnswered) return;
             isAnswered = true;
             
-            const selectedButton = event.currentTarget;
+            // ใช้ event.currentTarget สำหรับการคลิกปกติ หรือหาปุ่มที่ถูกหากมาจากการเรียกตรง
+            const selectedButton = event.currentTarget || document.querySelector(`.option-btn[data-is-correct="true"]`); 
             const selectedPreposition = selectedButton.dataset.preposition;
             const isCorrect = selectedButton.dataset.isCorrect === 'true';
 
@@ -723,9 +775,14 @@
                 // 4. Update status and enable next button
                 updateStatusBar();
                 
-                // 5. หน่วงเวลา 0.5 วินาที ก่อนเปิดปุ่ม Next
+                // 5. หน่วงเวลา 0.5 วินาที ก่อนเปิดปุ่ม Next (หรือไปข้อต่อไป)
                 setTimeout(() => {
                     nextBtn.disabled = false;
+                    
+                    // NEW: ถ้าโหมดลับทำงาน ให้ไปข้อต่อไปอัตโนมัติ
+                    if (isAutoModeActive) {
+                        nextBtn.click();
+                    }
                 }, 500); 
             });
         }
@@ -736,11 +793,15 @@
             if (synth.speaking) {
                 synth.cancel();
             }
+            
+            let totalQuestions = QUESTIONS_PER_LEVEL;
+            if(currentLevelQuestions.length > 0) {
+                 totalQuestions = currentLevelQuestions.length;
+            }
 
             levelTitleEl.textContent = `จบ Level ${currentLevelData.type}.${currentSubLevel.sub}!`;
             qCountEl.textContent = '';
             
-            const totalQuestions = currentLevelQuestions.length;
             feedbackMessageEl.innerHTML = `
                 <span style="font-size:2rem; font-weight:900; color:var(--color-primary);">
                     คุณทำได้ ${score}/${totalQuestions} ข้อ
@@ -754,10 +815,18 @@
 
             nextBtn.textContent = 'กลับหน้าหลัก';
             nextBtn.disabled = false;
+            
+            // NEW: ถ้าจบเกมในโหมดลับ ให้ปิดโหมด
+            if (isAutoModeActive) {
+                toggleAutoMode(); 
+            }
         }
 
         // --- EVENT LISTENERS ---
         
+        // Listener สำหรับ Double Click เพื่อเปิด/ปิดโหมดลับ
+        headerTitleEl.addEventListener('dblclick', toggleAutoMode);
+
         // Next/Go Back button
         nextBtn.addEventListener('click', () => {
             // Cancel TTS if it was speaking when moving to next screen
