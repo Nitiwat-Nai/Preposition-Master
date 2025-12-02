@@ -2,29 +2,34 @@
 <html lang="th">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Preposition Master - เกมข้อสอบคำบุพบท</title>
-    <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@400;700;900&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-
+    <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@400;600;800&display=swap" rel="stylesheet">
+    
     <style>
-        /* --- Mobile-First CSS with New Color Theme (Purple/Pink/Green) --- */
+        /* --- Modern UI Variable & Theme --- */
         :root {
-            --color-primary: #9C27B0; /* Deep Purple (ปุ่ม Next) */
-            --color-secondary: #E1BEE7; /* Light Lavender (ขอบปุ่มตัวเลือก) */
-            --color-correct: #4CAF50; /* Primary Green (สีถูก) */
-            --color-wrong: #FF5252; /* Bright Red (สีผิด) */
-            --color-bg: #F3E5F5; /* Very Light Purple/Pink (พื้นหลัง) */
-            --color-card: #FFFFFF; /* White (สำหรับ Header/ส่วนข้อมูล) */
-            --color-button-bg: #FCE4EC; /* Light Pink (พื้นหลังปุ่มตัวเลือก) */
-            --color-text-dark: #333333;
-            --color-text-light: #FFFFFF;
+            --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --accent-color: #FF6B6B;
+            --correct-color: #48bb78; /* Green */
+            --wrong-color: #f56565;   /* Red */
+            
+            --bg-color: #f0f2f5;
+            --card-bg: rgba(255, 255, 255, 0.95);
+            
+            --text-main: #2d3748;
+            --text-light: #718096;
+            
+            --shadow-soft: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+            --shadow-inner: inset 0 2px 4px 0 rgba(0, 0, 0, 0.06);
+            --radius-xl: 24px;
+            --radius-md: 12px;
         }
 
         body {
             font-family: 'Sarabun', sans-serif;
-            background-color: var(--color-bg);
-            color: var(--color-text-dark);
+            background: var(--primary-gradient); /* Gradient Background */
+            color: var(--text-main);
             margin: 0;
             padding: 0;
             display: flex;
@@ -32,245 +37,324 @@
             align-items: center;
             min-height: 100vh;
             text-align: center;
+            overflow-x: hidden;
         }
 
+        /* --- Main Container (Glass-like) --- */
         .container {
-            width: 100%;
-            max-width: 500px;
-            box-sizing: border-box;
-            background-color: var(--color-card);
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-            min-height: 100vh;
+            width: 95%;
+            max-width: 480px; /* กระชับขึ้นเล็กน้อยเพื่อความสวยงาม */
+            height: 90vh; /* ไม่เต็มจอเป๊ะ ให้มีขอบลอยๆ */
+            max-height: 850px;
+            
+            background-color: var(--card-bg);
+            backdrop-filter: blur(10px); /* Glass effect */
+            border-radius: var(--radius-xl);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+            
             display: flex;
             flex-direction: column;
-            justify-content: flex-start;
-            padding: 0;
+            overflow: hidden;
+            position: relative;
+            transition: all 0.3s ease;
         }
 
-        /* Header */
+        /* --- Header --- */
         header {
-            background-color: var(--color-primary);
-            color: var(--color-text-light);
-            padding: 1.5rem 1rem;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+            background: transparent;
+            padding: 1.5rem 1rem 0.5rem 1rem;
+            flex-shrink: 0;
         }
+        
         header h1 {
             font-size: 1.8rem;
+            font-weight: 800;
             margin: 0;
-            /* เพิ่ม transition เพื่อให้แอนิเมชันดูนุ่มนวล */
-            transition: transform 0.3s; 
-            cursor: pointer; /* เพื่อบอกใบ้ว่าสามารถคลิกได้ */
+            background: var(--primary-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent; /* ข้อความไล่สี */
+            cursor: pointer;
+            user-select: none;
+            transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
+        
+        header h1:active { transform: scale(0.95); }
 
-        /* --- Secret Mode Animation --- */
-        @keyframes slowBounce {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-4px); } /* Gentle lift */
+        /* Auto Mode Animation */
+        @keyframes pulse-gold {
+            0% { text-shadow: 0 0 0 rgba(255, 215, 0, 0); transform: scale(1); }
+            50% { text-shadow: 0 0 20px rgba(255, 215, 0, 0.8); transform: scale(1.05); }
+            100% { text-shadow: 0 0 0 rgba(255, 215, 0, 0); transform: scale(1); }
         }
         .auto-active {
-            animation: slowBounce 2s infinite ease-in-out; 
+            animation: pulse-gold 2s infinite ease-in-out;
+            -webkit-text-fill-color: #F59E0B !important; /* เปลี่ยนเป็นสีทอง */
         }
 
-        /* Screen Management */
+        /* --- Screens & Transitions --- */
         .screen {
-            padding: 1rem;
+            padding: 1rem 1.5rem;
             display: none; 
             flex-grow: 1;
             flex-direction: column;
             justify-content: space-between;
+            opacity: 0;
+            transition: opacity 0.3s ease;
         }
         .screen.active {
             display: flex;
+            opacity: 1;
         }
 
-        /* --- Level Selection Screen --- */
-        #level-select-screen .level-grid {
+        h2 { font-size: 1.4rem; color: var(--text-main); margin-bottom: 0.5rem; }
+        p { color: var(--text-light); margin-top: 0; font-size: 0.95rem; }
+
+        /* --- Level Grid --- */
+        .level-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 15px;
-            padding: 1rem 0;
+            gap: 12px;
+            padding: 10px 0;
+            overflow-y: auto; /* Scroll ได้ถ้า Level เยอะ */
+            max-height: 60vh;
+            padding-bottom: 20px;
         }
+        
+        /* Custom Scrollbar */
+        .level-grid::-webkit-scrollbar { width: 6px; }
+        .level-grid::-webkit-scrollbar-thumb { background-color: #cbd5e0; border-radius: 10px; }
+
         .level-btn {
-            background-color: #673AB7; 
-            color: var(--color-text-light);
-            border: none;
-            padding: 1.2rem 0.5rem; 
-            border-radius: 12px;
-            font-size: 1.1rem;
-            font-weight: bold;
-            cursor: pointer;
-            box-shadow: 0 4px 0 #5E35B1;
-            transition: transform 0.1s, box-shadow 0.1s;
+            background: white;
+            border: 1px solid #e2e8f0;
+            border-radius: 16px;
+            padding: 1rem;
             text-align: left;
-            display: flex;
-            flex-direction: column;
-            align-items: flex-start;
+            cursor: pointer;
+            transition: all 0.2s cubic-bezier(0.25, 0.8, 0.25, 1);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+            position: relative;
+            overflow: hidden;
         }
-        .level-btn:active {
-            transform: translateY(2px);
-            box-shadow: 0 2px 0 #5E35B1;
+
+        .level-btn:hover:not(:disabled) {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 15px rgba(0,0,0,0.08);
+            border-color: #b794f4;
         }
-        .level-btn-title {
-            font-size: 0.9rem;
-            font-weight: 400;
-            display: block;
-            margin-top: 5px;
-            color: #D1C4E9;
+        .level-btn:active:not(:disabled) { transform: translateY(0); }
+
+        .level-btn:disabled {
+            opacity: 0.6;
+            background-color: #f7fafc;
+            cursor: not-allowed;
+            filter: grayscale(100%);
         }
+
         .level-btn-type {
-            font-size: 0.7rem;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: #a0aec0;
             font-weight: 700;
-            opacity: 0.8;
+            display: block;
+            margin-bottom: 4px;
+        }
+        
+        .level-name-main {
+            font-size: 1.1rem;
+            font-weight: 800;
+            color: #553c9a;
+            display: block;
         }
 
-        /* --- Game Screen --- */
-        #game-screen {
-            min-height: calc(100vh - 8rem);
-            justify-content: flex-start;
-        }
-        #game-screen .top-content {
-            flex-grow: 1;
-            display: flex;
-            flex-direction: column;
+        .level-sub-detail {
+            font-size: 0.85rem;
+            color: #718096;
+            margin-top: 2px;
+            display: block;
         }
 
-        #game-screen .status-bar {
+        /* --- Game Area --- */
+        .status-bar {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 0.5rem 0;
-            font-weight: bold;
+            font-size: 0.9rem;
+            font-weight: 700;
+            color: #a0aec0;
+            background: white;
+            padding: 8px 16px;
+            border-radius: 30px;
             margin-bottom: 1.5rem;
-            color: #4A148C; 
+            box-shadow: var(--shadow-soft);
         }
+        .score-pill { color: var(--correct-color); }
 
-        /* Prompt Area (Question Sentence) */
-        #prompt-area {
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            margin-bottom: 1.5rem; 
-            min-height: 100px;
-            padding: 0 10px; 
-        }
         #question-sentence {
-            font-size: 1.6rem; 
-            font-weight: bold;
-            line-height: 1.5;
+            font-size: 1.6rem;
+            font-weight: 700;
+            line-height: 1.6;
             text-align: left;
-            padding: 15px; 
-            background-color: #f7f7f7;
-            border-radius: 8px;
-            width: 100%;
-            box-sizing: border-box;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
-        }
-        .blank {
-            color: var(--color-primary);
-            text-decoration: underline;
-            padding: 0 5px;
+            padding: 24px;
+            background: white;
+            border-radius: var(--radius-xl);
+            box-shadow: var(--shadow-soft);
+            color: var(--text-main);
+            margin-bottom: 1rem;
+            position: relative;
         }
         
-        /* Choices Area (4-button Grid) */
+        /* Decoration for Question Box */
+        #question-sentence::before {
+            content: '"';
+            position: absolute;
+            top: -10px;
+            left: 15px;
+            font-size: 4rem;
+            color: #e2e8f0;
+            font-family: serif;
+            line-height: 1;
+        }
+
+        .blank {
+            color: #805ad5;
+            border-bottom: 3px dashed #805ad5;
+            padding: 0 8px;
+            display: inline-block;
+            min-width: 50px;
+            text-align: center;
+        }
+
+        #feedback-message {
+            min-height: 24px;
+            font-size: 1rem;
+            margin-bottom: 1rem;
+            transition: transform 0.3s;
+        }
+
+        /* Options Grid */
         #options-area {
             display: grid;
-            grid-template-columns: 1fr 1fr; 
+            grid-template-columns: 1fr 1fr;
             gap: 15px;
             flex-grow: 1;
-            padding-bottom: 1rem;
-        }
-        .option-btn {
-            background-color: var(--color-button-bg);
-            border: 3px solid var(--color-secondary); 
-            border-radius: 12px; 
-            padding: 10px 10px; 
-            cursor: pointer;
-            transition: all 0.2s;
-            box-sizing: border-box;
-            
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            font-size: 1.5em; 
-            font-weight: bold;
-            color: var(--color-text-dark);
+            align-content: start;
         }
 
-        .option-btn:hover, .option-btn:focus {
-            border-color: var(--color-primary); 
+        .option-btn {
+            background: white;
+            border: none;
+            border-radius: 18px;
+            padding: 15px;
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: var(--text-main);
+            cursor: pointer;
+            box-shadow: 0 4px 0 #e2e8f0; /* 3D effect bottom border */
+            transition: all 0.1s;
+            border: 2px solid transparent;
+            touch-action: manipulation; /* Fix touch delay */
+        }
+
+        .option-btn:hover:not(:disabled) {
+            background-color: #f7fafc;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 0 #cbd5e0;
+        }
+
+        .option-btn:active:not(:disabled) {
+            transform: translateY(4px);
+            box-shadow: 0 0 0 transparent;
+        }
+
+        /* Correct/Incorrect States */
+        .option-btn.correct {
+            background-color: var(--correct-color);
+            color: white;
+            box-shadow: 0 4px 0 #2f855a !important;
+            border-color: #2f855a;
+            transform: translateY(1px);
         }
         
-        /* Feedback Colors */
-        .option-btn.correct {
-            border-color: var(--color-correct) !important; 
-            box-shadow: 0 0 15px #81C784; 
-            background-color: #E8F5E9; 
-            transform: scale(1.02);
-        }
         .option-btn.incorrect {
-            border-color: var(--color-wrong) !important; 
-            animation: shake 0.5s;
-            background-color: #FFEBEE; 
-        }
-        @keyframes shake {
-            0%, 100% {transform: translateX(0);}
-            20%, 60% {transform: translateX(-5px);}
-            40%, 80% {transform: translateX(5px);}
+            background-color: var(--wrong-color);
+            color: white;
+            box-shadow: 0 4px 0 #c53030 !important;
+            border-color: #c53030;
+            animation: shake 0.4s cubic-bezier(.36,.07,.19,.97) both;
         }
 
-        /* Footer/Control */
-        #game-footer {
-            margin-top: 1.5rem;
-            padding-top: 1rem;
-            border-top: 1px solid #ECEFF1;
-            flex-shrink: 0; 
+        @keyframes shake {
+            10%, 90% { transform: translate3d(-1px, 0, 0); }
+            20%, 80% { transform: translate3d(2px, 0, 0); }
+            30%, 50%, 70% { transform: translate3d(-4px, 0, 0); }
+            40%, 60% { transform: translate3d(4px, 0, 0); }
         }
+
+        /* Footer */
+        #game-footer {
+            margin-top: auto;
+            padding-top: 1rem;
+        }
+
         #next-btn {
-            background-color: var(--color-primary);
-            color: var(--color-text-light);
+            background: var(--text-main);
+            color: white;
             border: none;
             width: 100%;
-            padding: 1rem;
+            padding: 1.2rem;
             border-radius: 50px;
-            font-size: 1.2rem;
-            font-weight: bold;
+            font-size: 1.1rem;
+            font-weight: 800;
             cursor: pointer;
-            box-shadow: 0 4px 0 #7B1FA2;
-            transition: all 0.1s;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.15);
+            transition: all 0.2s;
+            letter-spacing: 1px;
         }
-        #next-btn:active {
-            transform: translateY(2px);
-            box-shadow: 0 2px 0 #7B1FA2;
+
+        #next-btn:active { transform: scale(0.98); box-shadow: 0 5px 10px rgba(0,0,0,0.1); }
+        #next-btn:disabled { background: #cbd5e0; cursor: default; box-shadow: none; transform: none; }
+
+        /* Confetti Effect */
+        .confetti {
+            position: absolute;
+            width: 10px; height: 10px;
+            background-color: #f00;
+            animation: fall linear forwards;
+            z-index: 100;
         }
+        @keyframes fall { to { transform: translateY(100vh) rotate(720deg); } }
+
     </style>
 </head>
 <body>
 
     <div class="container">
         <header>
-            <h1>🗺️ Preposition Master</h1>
+            <h1 id="app-title">Preposition Master</h1>
         </header>
 
         <div id="level-select-screen" class="screen active">
-            <h2>🎯 เลือกชุดคำบุพบท</h2>
-            <p>ฝึกฝนตามประเภทและระดับ (10 ข้อ/ระดับย่อย):</p>
+            <div style="text-align: left; padding-left: 5px;">
+                <h2>🎯 เลือกบทเรียน</h2>
+                <p>ฝึกฝนการใช้คำบุพบทตามหัวข้อ (120 ข้อ)</p>
+            </div>
             <div class="level-grid" id="level-grid">
                 </div>
-            <p style="padding-top: 1rem; color:#9E9E9E;">มี 4 ประเภทหลัก แต่ละประเภทมี 3 ระดับ รวม 120 ข้อ</p>
         </div>
 
         <div id="game-screen" class="screen">
             <div class="top-content">
                 <div class="status-bar">
-                    <span id="level-title"></span>
-                    <span id="q-count">ข้อ: 0/10</span>
-                    <span id="score">คะแนน: 0</span>
+                    <span id="level-title">Level 1</span>
+                    <span id="q-count">1/10</span>
+                    <span class="score-pill" id="score">Score: 0</span>
                 </div>
 
                 <div id="prompt-area">
                     <div id="question-sentence"></div>
-                    <div id="feedback-message" style="margin-top:20px; font-weight:bold; color:var(--color-text-dark);">เลือกคำตอบที่ถูกต้อง</div>
+                    <div id="feedback-message">เลือกคำตอบที่ถูกต้อง</div>
                 </div>
 
                 <div id="options-area">
@@ -278,7 +362,7 @@
             </div>
 
             <div id="game-footer">
-                <button id="next-btn" disabled>ข้อถัดไป</button>
+                <button id="next-btn" disabled>ข้อถัดไป <i class="fa-solid fa-arrow-right"></i></button>
             </div>
         </div>
     </div>
@@ -286,15 +370,17 @@
     <audio id="correct-audio" src="sounds/correct.mp3"></audio>
     <audio id="incorrect-audio" src="sounds/incorrect.mp3"></audio>
 
-    <script>
-        /* ------------------- JavaScript Core Logic (Preposition Master V5.1) ------------------- */
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/js/all.min.js"></script>
 
-        // --- DATA (4 Main Types x 3 Sub-Levels = 12 Levels Total) ---
+    <script>
+        /* ------------------- JavaScript Core Logic (Preposition Master V6 - Optimized) ------------------- */
+
+        // --- DATA (4 Main Types x 3 Sub-Levels) ---
+        // (ใช้ชุดข้อมูลเดิมจาก V5.1 ที่ครบถ้วนแล้ว)
         const LEVEL_DATA = [
-            // ========================================================================================
-            // TYPE 1: PLACE (ตำแหน่ง)
+            // TYPE 1: PLACE
             { type: 1, title: "1. PLACE (ตำแหน่ง)", levels: [
-                { sub: 1, name: "Basic (in, on, at)", questions: [ // L1.1
+                { sub: 1, name: "Basic", detail: "(in, on, at)", questions: [ 
                     { sentence: "The book is ______ the table.", correct: "on", distractors: ["in", "at", "to"], ttsContext: "The book is on the table." },
                     { sentence: "She lives ______ Bangkok.", correct: "in", distractors: ["on", "at", "over"], ttsContext: "She lives in Bangkok." },
                     { sentence: "I saw him standing ______ the corner.", correct: "at", distractors: ["in", "on", "from"], ttsContext: "I saw him standing at the corner." },
@@ -306,7 +392,7 @@
                     { sentence: "Please meet me ______ the entrance.", correct: "at", distractors: ["in", "on", "with"], ttsContext: "Please meet me at the entrance." },
                     { sentence: "There is a beautiful garden ______ the house.", correct: "behind", distractors: ["on", "at", "with"], ttsContext: "There is a beautiful garden behind the house." },
                 ]},
-                { sub: 2, name: "Intermediate (between, next to)", questions: [ // L1.2
+                { sub: 2, name: "Intermediate", detail: "(between, next to)", questions: [ 
                     { sentence: "The store is located ______ the bank and the post office.", correct: "between", distractors: ["among", "near", "with"], ttsContext: "The store is located between the bank and the post office." },
                     { sentence: "The three friends sat ______ the campfire.", correct: "around", distractors: ["between", "next to", "on"], ttsContext: "The three friends sat around the campfire." },
                     { sentence: "My house is ______ the school.", correct: "near", distractors: ["on", "at", "above"], ttsContext: "My house is near the school." },
@@ -318,7 +404,7 @@
                     { sentence: "The clouds floated ______ the city.", correct: "above", distractors: ["under", "at", "on"], ttsContext: "The clouds floated above the city." },
                     { sentence: "The ship sailed ______ the coast.", correct: "along", distractors: ["in", "at", "under"], ttsContext: "The ship sailed along the coast." },
                 ]},
-                { sub: 3, name: "Advanced (in front of, over)", questions: [ // L1.3
+                { sub: 3, name: "Advanced", detail: "(in front of, over)", questions: [
                     { sentence: "They pitched their tent ______ the lake.", correct: "beside", distractors: ["in front of", "over", "at"], ttsContext: "They pitched their tent beside the lake." },
                     { sentence: "The car is parked ______ the building entrance.", correct: "in front of", distractors: ["behind", "on", "over"], ttsContext: "The car is parked in front of the building entrance." },
                     { sentence: "The temperature is ten degrees ______ zero.", correct: "below", distractors: ["above", "on", "at"], ttsContext: "The temperature is ten degrees below zero." },
@@ -331,10 +417,9 @@
                     { sentence: "We must look ______ the surface.", correct: "beneath", distractors: ["above", "on", "at"], ttsContext: "We must look beneath the surface." },
                 ]},
             ]},
-            // ========================================================================================
-            // TYPE 2: TIME (เวลา)
+            // TYPE 2: TIME
             { type: 2, title: "2. TIME (เวลา)", levels: [
-                { sub: 1, name: "Basic (at, on, in)", questions: [ // L2.1
+                { sub: 1, name: "Basic", detail: "(at, on, in)", questions: [
                     { sentence: "The sun rises ______ the morning.", correct: "in", distractors: ["on", "at", "to"], ttsContext: "The sun rises in the morning." },
                     { sentence: "I always wake up ______ six o'clock.", correct: "at", distractors: ["in", "on", "for"], ttsContext: "I always wake up at six o'clock." },
                     { sentence: "We have a holiday ______ December.", correct: "in", distractors: ["on", "at", "with"], ttsContext: "We have a holiday in December." },
@@ -346,7 +431,7 @@
                     { sentence: "He worked there ______ 2020.", correct: "in", distractors: ["on", "at", "since"], ttsContext: "He worked there in 2020." },
                     { sentence: "She always studies ______ night.", correct: "at", distractors: ["in", "on", "during"], ttsContext: "She always studies at night." },
                 ]},
-                { sub: 2, name: "Intermediate (since, for, during)", questions: [ // L2.2
+                { sub: 2, name: "Intermediate", detail: "(since, for, during)", questions: [
                     { sentence: "We have been waiting ______ two hours.", correct: "for", distractors: ["since", "during", "in"], ttsContext: "We have been waiting for two hours." },
                     { sentence: "I haven't seen him ______ last summer.", correct: "since", distractors: ["for", "during", "at"], ttsContext: "I haven't seen him since last summer." },
                     { sentence: "She fell asleep ______ the movie.", correct: "during", distractors: ["for", "since", "on"], ttsContext: "She fell asleep during the movie." },
@@ -357,8 +442,8 @@
                     { sentence: "We stopped talking ______ a moment.", correct: "for", distractors: ["since", "during", "at"], ttsContext: "We stopped talking for a moment." },
                     { sentence: "I finished my homework just ______ the deadline.", correct: "before", distractors: ["after", "during", "at"], ttsContext: "I finished my homework just before the deadline." },
                     { sentence: "We waited for the bus ______ 10 minutes.", correct: "for", distractors: ["since", "during", "in"], ttsContext: "We waited for the bus for 10 minutes." },
-                ]}, 
-                { sub: 3, name: "Advanced (by, until, in time, on time)", questions: [ // L2.3
+                ]},
+                { sub: 3, name: "Advanced", detail: "(by, until, in time)", questions: [
                     { sentence: "You must submit the application ______ Friday.", correct: "by", distractors: ["until", "for", "since"], ttsContext: "You must submit the application by Friday." },
                     { sentence: "The meeting is scheduled to start ______ 2:00 PM.", correct: "at", distractors: ["in", "on", "by"], ttsContext: "The meeting is scheduled to start at 2 P.M." },
                     { sentence: "We arrived ______ time for the flight.", correct: "in", distractors: ["on", "at", "by"], ttsContext: "We arrived in time for the flight." },
@@ -371,10 +456,9 @@
                     { sentence: "I'll wait for you ______ the movie starts.", correct: "until", distractors: ["by", "for", "since"], ttsContext: "I'll wait for you until the movie starts." },
                 ]},
             ]},
-            // ========================================================================================
-            // TYPE 3: DIRECTION/MOVEMENT (ทิศทาง/การเคลื่อนที่)
+            // TYPE 3: DIRECTION
             { type: 3, title: "3. DIRECTION (ทิศทาง)", levels: [
-                { sub: 1, name: "Basic (to, into, through)", questions: [ // L3.1
+                { sub: 1, name: "Basic", detail: "(to, into, through)", questions: [
                     { sentence: "She walked ______ the park.", correct: "to", distractors: ["into", "through", "on"], ttsContext: "She walked to the park." },
                     { sentence: "He jumped ______ the pool.", correct: "into", distractors: ["to", "at", "on"], ttsContext: "He jumped into the pool." },
                     { sentence: "We drove ______ the tunnel.", correct: "through", distractors: ["into", "on", "at"], ttsContext: "We drove through the tunnel." },
@@ -386,7 +470,7 @@
                     { sentence: "The dog chased the cat ______ the house.", correct: "around", distractors: ["across", "through", "to"], ttsContext: "The dog chased the cat around the house." },
                     { sentence: "He moved ______ London when he was 10.", correct: "to", distractors: ["at", "in", "from"], ttsContext: "He moved to London when he was 10." },
                 ]},
-                { sub: 2, name: "Intermediate (across, along, past)", questions: [ // L3.2
+                { sub: 2, name: "Intermediate", detail: "(across, along, past)", questions: [
                     { sentence: "The ferry takes people ______ the river.", correct: "across", distractors: ["along", "past", "into"], ttsContext: "The ferry takes people across the river." },
                     { sentence: "We strolled quietly ______ the beach.", correct: "along", distractors: ["across", "past", "through"], ttsContext: "We strolled quietly along the beach." },
                     { sentence: "I saw her driving ______ my house yesterday.", correct: "past", distractors: ["across", "along", "into"], ttsContext: "I saw her driving past my house yesterday." },
@@ -398,7 +482,7 @@
                     { sentence: "The car drove straight ______ the intersection.", correct: "through", distractors: ["across", "past", "to"], ttsContext: "The car drove straight through the intersection." },
                     { sentence: "The runner went straight ______ the finish line.", correct: "for", distractors: ["to", "at", "on"], ttsContext: "The runner went straight for the finish line." },
                 ]},
-                { sub: 3, name: "Advanced (up, down, toward, away from)", questions: [ // L3.3
+                { sub: 3, name: "Advanced", detail: "(up, down, toward)", questions: [
                     { sentence: "The price of oil went sharply ______ last month.", correct: "up", distractors: ["down", "toward", "away from"], ttsContext: "The price of oil went sharply up last month." },
                     { sentence: "Please move ______ the fire exit.", correct: "away from", distractors: ["toward", "up", "down"], ttsContext: "Please move away from the fire exit." },
                     { sentence: "We walked slowly ______ the sound of the music.", correct: "toward", distractors: ["away from", "up", "down"], ttsContext: "We walked slowly toward the sound of the music." },
@@ -411,10 +495,9 @@
                     { sentence: "He glanced ______ the list to check the names.", correct: "down", distractors: ["up", "toward", "away from"], ttsContext: "He glanced down the list to check the names." },
                 ]},
             ]},
-            // ========================================================================================
-            // TYPE 4: OTHER/COMPLEX (ความสัมพันธ์อื่น ๆ)
-            { type: 4, title: "4. OTHER (ความสัมพันธ์อื่น ๆ)", levels: [
-                { sub: 1, name: "Basic (of, with, for)", questions: [ // L4.1
+            // TYPE 4: OTHER
+            { type: 4, title: "4. OTHER (อื่น ๆ)", levels: [
+                { sub: 1, name: "Basic", detail: "(of, with, for)", questions: [
                     { sentence: "This is a picture ______ my family.", correct: "of", distractors: ["for", "with", "at"], ttsContext: "This is a picture of my family." },
                     { sentence: "I wrote the letter ______ a pen.", correct: "with", distractors: ["by", "for", "to"], ttsContext: "I wrote the letter with a pen." },
                     { sentence: "The cake was made ______ my mother.", correct: "by", distractors: ["with", "for", "of"], ttsContext: "The cake was made by my mother." },
@@ -426,7 +509,7 @@
                     { sentence: "She traveled ______ plane.", correct: "by", distractors: ["with", "on", "in"], ttsContext: "She traveled by plane." },
                     { sentence: "I'm interested ______ learning French.", correct: "in", distractors: ["on", "at", "for"], ttsContext: "I'm interested in learning French." },
                 ]},
-                { sub: 2, name: "Intermediate (according to, instead of)", questions: [ // L4.2
+                { sub: 2, name: "Intermediate", detail: "(according to, instead of)", questions: [
                     { sentence: "______ the news, the flight has been cancelled.", correct: "according to", distractors: ["instead of", "despite", "with"], ttsContext: "According to the news, the flight has been cancelled." },
                     { sentence: "He took a bus ______ a taxi to save money.", correct: "instead of", distractors: ["according to", "in spite of", "due to"], ttsContext: "He took a bus instead of a taxi to save money." },
                     { sentence: "Everyone agreed ______ John.", correct: "except for", distractors: ["instead of", "according to", "due to"], ttsContext: "Everyone agreed except for John." },
@@ -438,7 +521,7 @@
                     { sentence: "She decided to study medicine ______ becoming a lawyer.", correct: "instead of", distractors: ["according to", "due to", "in spite of"], ttsContext: "She decided to study medicine instead of becoming a lawyer." },
                     { sentence: "The meeting will proceed ______ the board's decision.", correct: "according to", distractors: ["instead of", "despite", "with"], ttsContext: "The meeting will proceed according to the board's decision." },
                 ]},
-                { sub: 3, name: "Advanced (despite, in spite of, regarding)", questions: [ // L4.3
+                { sub: 3, name: "Advanced", detail: "(despite, regarding)", questions: [
                     { sentence: "______ the heavy rain, they still went hiking.", correct: "in spite of", distractors: ["despite", "owing to", "regarding"], ttsContext: "In spite of the heavy rain, they still went hiking." },
                     { sentence: "______ his illness, he managed to attend the meeting.", correct: "despite", distractors: ["in spite of", "due to", "regarding"], ttsContext: "Despite his illness, he managed to attend the meeting." },
                     { sentence: "The failure was entirely ______ a lack of preparation.", correct: "owing to", distractors: ["despite", "in spite of", "regarding"], ttsContext: "The failure was entirely owing to a lack of preparation." },
@@ -456,11 +539,10 @@
         const QUESTIONS_PER_LEVEL = 10;
         const OPTIONS_COUNT = 4;
 
-        // --- ELEMENTS ---
+        // --- Elements ---
         const levelSelectScreen = document.getElementById('level-select-screen');
         const gameScreen = document.getElementById('game-screen');
         const levelGridEl = document.getElementById('level-grid');
-
         const levelTitleEl = document.getElementById('level-title');
         const qCountEl = document.getElementById('q-count');
         const scoreEl = document.getElementById('score');
@@ -473,162 +555,111 @@
         const correctAudio = document.getElementById('correct-audio');
         const incorrectAudio = document.getElementById('incorrect-audio');
 
-        // TTS Setup
+        // --- State ---
+        let currentLevelData, currentSubLevel, currentQuizIndex, score, isAnswered;
+        let currentQuestion = {};
+        let currentLevelQuestions = []; 
+        let isAutoModeActive = false; 
+
+        // --- TTS & Audio ---
         const synth = window.speechSynthesis;
         let ttsUtterance = new SpeechSynthesisUtterance();
         ttsUtterance.lang = 'en-US'; 
         ttsUtterance.rate = 0.8; 
 
-        // --- GAME STATE ---
-        let currentLevelData = null; 
-        let currentSubLevel = null; 
-        let currentQuizIndex = 0; 
-        let score = 0;
-        let isAnswered = false;
-        let currentQuestion = {};
-        let currentLevelQuestions = []; 
-        let isAutoModeActive = false; // ตัวแปรสำหรับโหมดลับ
-
-        // --- TTS FUNCTION ---
-        function setMaleVoice() {
+        function initVoice() {
             const voices = synth.getVoices();
-            const maleVoice = voices.find(
-                voice => voice.lang === 'en-US' && (voice.name.includes('Male') || voice.name.includes('Zira') || voice.name.includes('Google US English Male'))
-            );
-            
-            if (maleVoice) {
-                ttsUtterance.voice = maleVoice;
-            } else {
-                // Fallback 
-            }
-        }
-
-        /** * ฟังก์ชันอ่านประโยคออกเสียง */
-        function speakAnswer(text, onEndCallback) {
-            if (synth.speaking) {
-                synth.cancel();
-            }
-            
-            ttsUtterance.text = text;
-            ttsUtterance.onend = null; 
-
-            if (onEndCallback) {
-                ttsUtterance.onend = onEndCallback;
-            }
-            
-            if (synth.getVoices().length === 0) {
-                 synth.onvoiceschanged = () => {
-                    setMaleVoice();
-                    synth.speak(ttsUtterance);
-                };
-            } else {
-                synth.speak(ttsUtterance);
+            if (voices.length > 0) {
+                const maleVoice = voices.find(v => v.lang === 'en-US' && (v.name.includes('Male') || v.name.includes('Google US English')));
+                if (maleVoice) ttsUtterance.voice = maleVoice;
             }
         }
         
-        // --- SECRET MODE LOGIC ---
+        // Ensure voice is loaded
+        if (synth.onvoiceschanged !== undefined) {
+            synth.onvoiceschanged = initVoice;
+        }
+        initVoice();
+
+        function speakAnswer(text, onEndCallback) {
+            if (synth.speaking) synth.cancel();
+            
+            ttsUtterance.text = text;
+            ttsUtterance.onend = onEndCallback;
+            synth.speak(ttsUtterance);
+        }
+
+        function playSound(isCorrect) {
+            const audio = isCorrect ? correctAudio : incorrectAudio;
+            audio.currentTime = 0;
+            audio.play().catch(e => console.log("Audio play failed (user interaction needed):", e));
+        }
+
+        // --- Secret Mode ---
         function toggleAutoMode() {
             isAutoModeActive = !isAutoModeActive;
             if (isAutoModeActive) {
                 headerTitleEl.classList.add('auto-active');
-                console.log('Secret Auto Mode ACTIVATED');
-                // หากอยู่ในหน้าเกมเพลย์ ให้เริ่มตอบอัตโนมัติ
-                if (gameScreen.classList.contains('active') && !isAnswered) {
-                    autoAnswer(2000); // หน่วง 2 วินาที
-                }
+                if (gameScreen.classList.contains('active') && !isAnswered) autoAnswer(2000);
             } else {
                 headerTitleEl.classList.remove('auto-active');
-                console.log('Secret Auto Mode DEACTIVATED');
-            }
-            // หยุดการอ่านเสียงทันทีเมื่อเปลี่ยนโหมด
-            if (synth.speaking) {
                 synth.cancel();
             }
         }
 
-        /** ฟังก์ชันสำหรับโหมดลับ: เลือกคำตอบที่ถูกต้องโดยอัตโนมัติ */
-        function autoAnswer(delay = 2000) { // แก้ไขค่าดีฟอลต์เป็น 2000 ms (2 วินาที)
+        function autoAnswer(delay = 2000) {
             if (!isAutoModeActive || isAnswered) return;
-            
             setTimeout(() => {
                 if (!isAutoModeActive || isAnswered) return; 
-
-                // หาปุ่มคำตอบที่ถูกต้อง
                 const correctButton = document.querySelector(`.option-btn[data-is-correct="true"]`);
-                
-                if (correctButton) {
-                    // จำลองการคลิกปุ่มคำตอบที่ถูกต้อง
-                    correctButton.click(); 
-                } 
+                if (correctButton) correctButton.click();
             }, delay);
         }
 
-        // --- UI & SCREEN MANAGEMENT ---
-
-        function showScreen(id) {
-            document.querySelectorAll('.screen').forEach(screen => {
-                screen.classList.remove('active');
+        // --- Navigation ---
+        function showScreen(screenEl) {
+            document.querySelectorAll('.screen').forEach(s => {
+                s.classList.remove('active');
+                s.style.opacity = 0;
             });
-            document.getElementById(id).classList.add('active');
+            screenEl.classList.add('active');
+            setTimeout(() => { screenEl.style.opacity = 1; }, 50); // Fade in
         }
 
         function createLevelButtons() {
             levelGridEl.innerHTML = '';
-            
             LEVEL_DATA.forEach(typeData => {
                 typeData.levels.forEach(level => {
                     const btn = document.createElement('button');
                     btn.className = 'level-btn';
                     
-                    btn.textContent = `L${typeData.type}.${level.sub} ${level.name.split('(')[0].trim()}`;
+                    btn.innerHTML = `
+                        <span class="level-btn-type">${typeData.title}</span>
+                        <span class="level-name-main">Level ${typeData.type}.${level.sub} - ${level.name}</span>
+                        <span class="level-sub-detail">${level.detail}</span>
+                    `;
                     
-                    const titleSpan = document.createElement('span');
-                    titleSpan.className = 'level-btn-title';
-                    titleSpan.textContent = `(${level.name.split('(')[1] || ''}`; 
-                    
-                    const typeSpan = document.createElement('span');
-                    typeSpan.className = 'level-btn-type';
-                    typeSpan.textContent = typeData.title.split('. ')[1]; 
-
-                    btn.prepend(typeSpan);
-                    btn.appendChild(titleSpan);
-
-                    btn.setAttribute('data-type', typeData.type);
-                    btn.setAttribute('data-sub', level.sub);
-
                     if (level.questions.length < QUESTIONS_PER_LEVEL) {
                         btn.disabled = true;
-                        btn.style.opacity = '0.5';
-                        btn.style.cursor = 'not-allowed';
-                        titleSpan.textContent = "(ข้อมูลไม่ครบถ้วน)";
+                        btn.style.opacity = '0.6';
+                        btn.innerHTML += ' <small>(Dev)</small>';
                     }
                     
-                    btn.addEventListener('click', () => {
-                        startLevel(typeData.type, level.sub);
-                    });
+                    btn.onclick = () => startLevel(typeData.type, level.sub);
                     levelGridEl.appendChild(btn);
                 });
             });
         }
 
-        function updateStatusBar() {
-            if (currentSubLevel) {
-                levelTitleEl.textContent = `${currentLevelData.title} | ${currentSubLevel.name.split('(')[0].trim()}`;
-                qCountEl.textContent = `ข้อ: ${currentQuizIndex + 1}/${currentLevelQuestions.length}`;
-            }
-            scoreEl.textContent = `คะแนน: ${score}`;
-        }
-
-        // --- GAME LOGIC ---
-
+        // --- Game Logic ---
         function startLevel(typeId, subId) {
-            currentLevelData = LEVEL_DATA.find(data => data.type === typeId);
-            currentSubLevel = currentLevelData.levels.find(level => level.sub === subId);
-            
+            currentLevelData = LEVEL_DATA.find(d => d.type === typeId);
+            currentSubLevel = currentLevelData.levels.find(l => l.sub === subId);
             currentLevelQuestions = [...currentSubLevel.questions].sort(() => 0.5 - Math.random());
             currentQuizIndex = 0;
             score = 0; 
-            showScreen('game-screen');
+            
+            showScreen(gameScreen);
             nextQuestion();
         }
 
@@ -639,220 +670,155 @@
             }
             
             isAnswered = false;
-            nextBtn.textContent = 'ข้อถัดไป';
             nextBtn.disabled = true;
+            nextBtn.innerHTML = 'ข้อถัดไป <i class="fa-solid fa-arrow-right"></i>';
             feedbackMessageEl.textContent = 'เลือกคำตอบที่ถูกต้อง';
-            feedbackMessageEl.style.color = 'var(--color-text-dark)';
-            questionSentenceEl.innerHTML = ''; 
-
+            feedbackMessageEl.style.color = '#718096';
+            questionSentenceEl.innerHTML = '';
             optionsArea.innerHTML = ''; 
             
-            updateStatusBar();
+            updateUI();
             setupQuestion();
         }
 
-        /** ฟังก์ชันสร้างตัวเลือกคำบุพบท 4 ตัว */
-        function getPrepositionOptions(correctPreposition, distractors) {
-            let options = [correctPreposition];
-            
-            options = [...options, ...distractors];
-
-            const commonPrepositions = ["in", "on", "at", "to", "for", "with", "by", "from", "of"];
-            
-            const uniqueOptions = new Set(options);
-
-            for (const prep of commonPrepositions) {
-                if (uniqueOptions.size < OPTIONS_COUNT && !uniqueOptions.has(prep)) {
-                    uniqueOptions.add(prep);
-                }
-            }
-            
-            if (uniqueOptions.size < OPTIONS_COUNT) {
-                 for (const q of currentLevelQuestions) {
-                    if (uniqueOptions.size >= OPTIONS_COUNT) break;
-                    if (!uniqueOptions.has(q.correct)) {
-                        uniqueOptions.add(q.correct);
-                    }
-                }
-            }
-            
-            const finalOptions = Array.from(uniqueOptions);
-            
-            finalOptions.sort(() => Math.random() - 0.5); 
-            
-            return finalOptions.slice(0, OPTIONS_COUNT);
+        function updateUI() {
+            levelTitleEl.textContent = `L${currentLevelData.type}.${currentSubLevel.sub}`;
+            qCountEl.textContent = `${currentQuizIndex + 1}/${currentLevelQuestions.length}`;
+            scoreEl.textContent = `Score: ${score}`;
         }
-
 
         function setupQuestion() {
             currentQuestion = currentLevelQuestions[currentQuizIndex];
             
-            // แสดงประโยคคำถาม
-            const formattedSentence = currentQuestion.sentence.replace('______', '<span class="blank">______</span>');
-            questionSentenceEl.innerHTML = formattedSentence;
+            // Text formatting
+            questionSentenceEl.innerHTML = currentQuestion.sentence.replace('______', '<span class="blank">______</span>');
 
-            // สร้างตัวเลือก 4 ตัว
-            const options = getPrepositionOptions(currentQuestion.correct, currentQuestion.distractors || []);
-            
+            // Options generation
+            let options = [currentQuestion.correct, ...currentQuestion.distractors];
+            // Ensure 4 options by borrowing from list if needed
+            if (options.length < 4) {
+                 const fillers = ["in", "on", "at", "to", "for", "with", "by", "of"];
+                 fillers.forEach(f => { if(options.length < 4 && !options.includes(f)) options.push(f); });
+            }
+            options = options.sort(() => 0.5 - Math.random()).slice(0, 4);
+
             options.forEach(prep => {
-                const button = document.createElement('button');
-                button.className = 'option-btn';
-                button.dataset.preposition = prep;
-                button.dataset.isCorrect = prep === currentQuestion.correct;
-                
-                button.textContent = prep.toUpperCase(); 
-                
-                button.addEventListener('click', handleAnswer);
-                optionsArea.appendChild(button);
+                const btn = document.createElement('button');
+                btn.className = 'option-btn';
+                btn.textContent = prep.toUpperCase();
+                btn.dataset.preposition = prep;
+                btn.dataset.isCorrect = (prep === currentQuestion.correct);
+                btn.onclick = handleAnswer;
+                optionsArea.appendChild(btn);
             });
 
-            // NEW: ถ้าโหมดลับทำงาน ให้เริ่มตอบอัตโนมัติ
-            if (isAutoModeActive) {
-                // *** แก้ไขจาก 1500ms เป็น 2000ms ตามที่ผู้ใช้ต้องการ ***
-                autoAnswer(2000); 
-            }
+            if (isAutoModeActive) autoAnswer(2000);
         }
 
-        function handleAnswer(event) {
+        function handleAnswer(e) {
             if (isAnswered) return;
             isAnswered = true;
             
-            // ใช้ event.currentTarget สำหรับการคลิกปกติ หรือหาปุ่มที่ถูกหากมาจากการเรียกตรง
-            const selectedButton = event.currentTarget || document.querySelector(`.option-btn[data-is-correct="true"]`); 
-            const selectedPreposition = selectedButton.dataset.preposition;
-            const isCorrect = selectedButton.dataset.isCorrect === 'true';
-
-            // 1. Disable all choices
-            document.querySelectorAll('.option-btn').forEach(btn => {
-                btn.removeEventListener('click', handleAnswer);
-                btn.disabled = true;
-            });
-
-            // 2. Feedback
-            let correctPrep = currentQuestion.correct;
-            let ttsText = currentQuestion.ttsContext;
+            const selectedBtn = e.currentTarget || document.querySelector(`.option-btn[data-is-correct="true"]`);
+            const isCorrect = selectedBtn.dataset.isCorrect === 'true';
+            
+            // Disable buttons
+            document.querySelectorAll('.option-btn').forEach(b => b.disabled = true);
 
             if (isCorrect) {
-                correctAudio.currentTime = 0;
-                correctAudio.play();
                 score++;
-                selectedButton.classList.add('correct');
+                playSound(true);
+                selectedBtn.classList.add('correct');
+                feedbackMessageEl.innerHTML = `<i class="fa-solid fa-circle-check"></i> ถูกต้อง! (${currentQuestion.correct.toUpperCase()})`;
+                feedbackMessageEl.style.color = 'var(--correct-color)';
                 
-                // แทนที่ช่องว่างด้วยคำตอบที่ถูกและเน้นสี
-                questionSentenceEl.innerHTML = currentQuestion.sentence.replace(
-                    '______', 
-                    `<span style="color:var(--color-correct); font-weight:900;">${selectedPreposition.toUpperCase()}</span>`
-                );
-
-                feedbackMessageEl.textContent = `✅ ถูกต้อง! (${selectedPreposition.toUpperCase()})`;
-                feedbackMessageEl.style.color = 'var(--color-correct)';
-
+                questionSentenceEl.innerHTML = currentQuestion.sentence.replace('______', 
+                    `<span style="color:var(--correct-color); border-bottom:3px solid var(--correct-color); padding:0 5px;">${currentQuestion.correct.toUpperCase()}</span>`);
             } else {
-                incorrectAudio.currentTime = 0;
-                incorrectAudio.play();
-                selectedButton.classList.add('incorrect');
-                
-                // แทนที่ช่องว่างด้วยคำตอบที่ผิดที่ผู้เล่นเลือก และเน้นสีแดง
-                questionSentenceEl.innerHTML = currentQuestion.sentence.replace(
-                    '______', 
-                    `<span style="color:var(--color-wrong); font-weight:900;">${selectedPreposition.toUpperCase()}</span>`
-                );
+                playSound(false);
+                selectedBtn.classList.add('incorrect');
+                const correctBtn = document.querySelector(`.option-btn[data-is-correct="true"]`);
+                if(correctBtn) correctBtn.classList.add('correct'); // Show correct one
 
-                feedbackMessageEl.textContent = `❌ ผิด! คำตอบที่ถูกคือ ${correctPrep.toUpperCase()}`;
-                feedbackMessageEl.style.color = 'var(--color-wrong)';
+                feedbackMessageEl.innerHTML = `<i class="fa-solid fa-circle-xmark"></i> ผิด! คำตอบคือ ${currentQuestion.correct.toUpperCase()}`;
+                feedbackMessageEl.style.color = 'var(--wrong-color)';
                 
-                // Highlight the correct answer button
-                const correctAnswerButton = document.querySelector(`.option-btn[data-is-correct="true"]`);
-                if (correctAnswerButton) {
-                    correctAnswerButton.classList.add('correct');
-                }
+                questionSentenceEl.innerHTML = currentQuestion.sentence.replace('______', 
+                    `<span style="color:var(--wrong-color); border-bottom:3px solid var(--wrong-color); padding:0 5px;">${selectedBtn.dataset.preposition.toUpperCase()}</span>`);
             }
+
+            updateUI();
             
-            // 3. TTS (อ่านประโยคที่ถูกต้อง)
-            speakAnswer(ttsText, () => {
-                // 4. Update status and enable next button
-                updateStatusBar();
-                
-                // 5. หน่วงเวลา 0.5 วินาที ก่อนเปิดปุ่ม Next (หรือไปข้อต่อไป)
+            // TTS and Auto-Next
+            speakAnswer(currentQuestion.ttsContext, () => {
                 setTimeout(() => {
                     nextBtn.disabled = false;
-                    
-                    // NEW: ถ้าโหมดลับทำงาน ให้ไปข้อต่อไปอัตโนมัติ
-                    if (isAutoModeActive) {
-                        nextBtn.click();
-                    }
-                }, 500); 
+                    if (isAutoModeActive) nextBtn.click();
+                }, 500);
             });
         }
 
-
         function endGame() {
-            // Cancel TTS if it was speaking
-            if (synth.speaking) {
-                synth.cancel();
-            }
+            if (synth.speaking) synth.cancel();
             
-            let totalQuestions = QUESTIONS_PER_LEVEL;
-            if(currentLevelQuestions.length > 0) {
-                 totalQuestions = currentLevelQuestions.length;
-            }
+            // Victory Confetti
+            createConfetti();
 
-            levelTitleEl.textContent = `จบ Level ${currentLevelData.type}.${currentSubLevel.sub}!`;
+            levelTitleEl.textContent = `Completed!`;
             qCountEl.textContent = '';
             
             feedbackMessageEl.innerHTML = `
-                <span style="font-size:2rem; font-weight:900; color:var(--color-primary);">
-                    คุณทำได้ ${score}/${totalQuestions} ข้อ
+                <div style="font-size:3rem; margin-bottom:10px;">🏆</div>
+                <span style="font-size:1.8rem; font-weight:800; color:var(--text-main);">
+                    คะแนนของคุณ: <span style="color:var(--correct-color)">${score}</span> / ${currentLevelQuestions.length}
                 </span>
-                <p>ยินดีด้วย! ลองกลับไปฝึกฝนใหม่ หรือลองระดับอื่น ๆ</p>
+                <p style="margin-top:10px">เก่งมาก! ฝึกฝนบ่อยๆ เพื่อความเป็นเลิศ</p>
             `;
-            feedbackMessageEl.style.color = 'var(--color-primary)';
             
-            optionsArea.innerHTML = ''; 
-            questionSentenceEl.innerHTML = '✨ สรุปผล ✨';
+            optionsArea.innerHTML = '';
+            questionSentenceEl.innerHTML = '<span style="color:#a0aec0; font-size:1.2rem">บทเรียนจบแล้ว</span>';
+            questionSentenceEl.style.textAlign = 'center';
+            questionSentenceEl.style.display = 'flex';
+            questionSentenceEl.style.justifyContent = 'center';
+            questionSentenceEl.style.alignItems = 'center';
+            questionSentenceEl.style.height = '150px';
 
-            nextBtn.textContent = 'กลับหน้าหลัก';
             nextBtn.disabled = false;
-            
-            // NEW: ถ้าจบเกมในโหมดลับ ให้ปิดโหมด
-            if (isAutoModeActive) {
-                toggleAutoMode(); 
+            nextBtn.innerHTML = '<i class="fa-solid fa-house"></i> กลับหน้าหลัก';
+            nextBtn.onclick = () => {
+                if (isAutoModeActive) toggleAutoMode();
+                showScreen(levelSelectScreen);
+            };
+        }
+
+        // Simple Confetti
+        function createConfetti() {
+            for(let i=0; i<30; i++) {
+                const conf = document.createElement('div');
+                conf.classList.add('confetti');
+                conf.style.left = Math.random() * 100 + 'vw';
+                conf.style.backgroundColor = `hsl(${Math.random() * 360}, 100%, 50%)`;
+                conf.style.animationDuration = Math.random() * 3 + 2 + 's';
+                document.body.appendChild(conf);
+                setTimeout(() => conf.remove(), 5000);
             }
         }
 
-        // --- EVENT LISTENERS ---
-        
-        // Listener สำหรับ Double Click เพื่อเปิด/ปิดโหมดลับ
+        // Init
         headerTitleEl.addEventListener('dblclick', toggleAutoMode);
-
-        // Next/Go Back button
-        nextBtn.addEventListener('click', () => {
-            // Cancel TTS if it was speaking when moving to next screen
-            if (synth.speaking) {
-                synth.cancel();
-            }
-
-            if (currentQuizIndex >= currentLevelQuestions.length) {
-                // Back to Level Selection
-                showScreen('level-select-screen');
-                currentQuizIndex = 0; 
+        
+        // Prevent nextBtn default binding override in endGame
+        const defaultNextAction = () => {
+             if (currentQuizIndex >= currentLevelQuestions.length) {
+                showScreen(levelSelectScreen);
             } else {
-                // Next Question
                 currentQuizIndex++;
                 nextQuestion();
             }
-        });
+        };
+        nextBtn.onclick = defaultNextAction;
 
-
-        // --- INITIAL SETUP ---
-        document.addEventListener('DOMContentLoaded', () => {
-            // Set up male voice preference when voices are loaded
-            synth.onvoiceschanged = setMaleVoice; 
-            setMaleVoice(); // Try to set it immediately
-
-            createLevelButtons();
-            showScreen('level-select-screen');
-        });
+        createLevelButtons();
     </script>
 </body>
 </html>
