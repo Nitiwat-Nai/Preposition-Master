@@ -3,33 +3,39 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Preposition Master - เกมข้อสอบคำบุพบท</title>
+    <title>Preposition Master V7</title>
     <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@400;600;800&display=swap" rel="stylesheet">
-    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
     <style>
-        /* --- Modern UI Variable & Theme --- */
+        /* --- Color Palette & Variables --- */
         :root {
-            --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            --accent-color: #FF6B6B;
-            --correct-color: #48bb78; /* Green */
-            --wrong-color: #f56565;   /* Red */
+            /* Main Theme Colors */
+            --primary-color: #6C63FF; /* Vibrant Purple */
+            --primary-dark: #5a52d5;
+            --primary-light: #EEF2FF; /* Very light purple for backgrounds */
             
-            --bg-color: #f0f2f5;
-            --card-bg: rgba(255, 255, 255, 0.95);
+            --secondary-color: #FF6584; /* Pink Accent */
             
-            --text-main: #2d3748;
-            --text-light: #718096;
+            --correct-color: #00B894; /* Mint Green */
+            --wrong-color: #FF7675;   /* Soft Red */
             
-            --shadow-soft: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
-            --shadow-inner: inset 0 2px 4px 0 rgba(0, 0, 0, 0.06);
+            --bg-gradient: linear-gradient(135deg, #a8c0ff 0%, #3f2b96 100%);
+            
+            --text-dark: #2D3436;
+            --text-grey: #636E72;
+            --text-white: #FFFFFF;
+
             --radius-xl: 24px;
-            --radius-md: 12px;
+            --radius-md: 16px;
+            --shadow-card: 0 10px 20px rgba(0,0,0,0.15);
+            --shadow-btn: 0 4px 0 rgba(0,0,0,0.1);
         }
 
         body {
             font-family: 'Sarabun', sans-serif;
-            background: var(--primary-gradient); /* Gradient Background */
-            color: var(--text-main);
+            background: var(--bg-gradient);
+            color: var(--text-dark);
             margin: 0;
             padding: 0;
             display: flex;
@@ -40,256 +46,250 @@
             overflow-x: hidden;
         }
 
-        /* --- Main Container (Glass-like) --- */
+        /* --- Main Container --- */
         .container {
             width: 95%;
-            max-width: 480px; /* กระชับขึ้นเล็กน้อยเพื่อความสวยงาม */
-            height: 90vh; /* ไม่เต็มจอเป๊ะ ให้มีขอบลอยๆ */
-            max-height: 850px;
+            max-width: 500px;
+            height: 92vh;
+            max-height: 900px;
             
-            background-color: var(--card-bg);
-            backdrop-filter: blur(10px); /* Glass effect */
+            /* ลดความขาวลง ใช้สีขาวโปร่งแสงเล็กน้อย เพื่อให้เห็นสีพื้นหลังจางๆ */
+            background-color: rgba(255, 255, 255, 0.92);
+            backdrop-filter: blur(10px);
+            
             border-radius: var(--radius-xl);
-            box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+            box-shadow: 0 25px 50px rgba(0,0,0,0.3);
             
             display: flex;
             flex-direction: column;
             overflow: hidden;
             position: relative;
-            transition: all 0.3s ease;
         }
 
         /* --- Header --- */
         header {
-            background: transparent;
-            padding: 1.5rem 1rem 0.5rem 1rem;
-            flex-shrink: 0;
+            /* เพิ่มสีพื้นหลังให้ส่วนหัว ไม่ให้ดูขาวล้วน */
+            background: var(--primary-light);
+            padding: 1.5rem 1rem 1rem 1rem;
+            border-bottom: 2px solid rgba(108, 99, 255, 0.1);
         }
         
         header h1 {
             font-size: 1.8rem;
             font-weight: 800;
             margin: 0;
-            background: var(--primary-gradient);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent; /* ข้อความไล่สี */
+            color: var(--primary-color);
+            text-transform: uppercase;
+            letter-spacing: 1px;
             cursor: pointer;
             user-select: none;
-            transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            text-shadow: 2px 2px 0px rgba(0,0,0,0.05);
+            transition: transform 0.2s;
         }
         
-        header h1:active { transform: scale(0.95); }
-
         /* Auto Mode Animation */
-        @keyframes pulse-gold {
-            0% { text-shadow: 0 0 0 rgba(255, 215, 0, 0); transform: scale(1); }
-            50% { text-shadow: 0 0 20px rgba(255, 215, 0, 0.8); transform: scale(1.05); }
-            100% { text-shadow: 0 0 0 rgba(255, 215, 0, 0); transform: scale(1); }
+        @keyframes pulse-active {
+            0% { transform: scale(1); filter: brightness(1); }
+            50% { transform: scale(1.05); filter: brightness(1.2); color: #FFD700; }
+            100% { transform: scale(1); filter: brightness(1); }
         }
         .auto-active {
-            animation: pulse-gold 2s infinite ease-in-out;
-            -webkit-text-fill-color: #F59E0B !important; /* เปลี่ยนเป็นสีทอง */
+            animation: pulse-active 2s infinite ease-in-out;
         }
 
-        /* --- Screens & Transitions --- */
+        /* --- Screens --- */
         .screen {
-            padding: 1rem 1.5rem;
+            padding: 1rem;
             display: none; 
             flex-grow: 1;
             flex-direction: column;
             justify-content: space-between;
-            opacity: 0;
-            transition: opacity 0.3s ease;
+            overflow-y: auto; /* Allow scroll if content is long */
         }
-        .screen.active {
-            display: flex;
-            opacity: 1;
-        }
+        .screen.active { display: flex; }
 
-        h2 { font-size: 1.4rem; color: var(--text-main); margin-bottom: 0.5rem; }
-        p { color: var(--text-light); margin-top: 0; font-size: 0.95rem; }
-
-        /* --- Level Grid --- */
+        /* --- Level Grid (Colorful Cards) --- */
         .level-grid {
             display: grid;
-            grid-template-columns: 1fr 1fr;
+            grid-template-columns: 1fr; /* Default 1 column on very small screens */
             gap: 12px;
-            padding: 10px 0;
-            overflow-y: auto; /* Scroll ได้ถ้า Level เยอะ */
-            max-height: 60vh;
-            padding-bottom: 20px;
+            padding: 10px 5px;
         }
         
-        /* Custom Scrollbar */
-        .level-grid::-webkit-scrollbar { width: 6px; }
-        .level-grid::-webkit-scrollbar-thumb { background-color: #cbd5e0; border-radius: 10px; }
+        /* Responsive Grid: 2 columns on slightly wider screens */
+        @media (min-width: 350px) {
+            .level-grid { grid-template-columns: 1fr 1fr; }
+        }
 
         .level-btn {
-            background: white;
-            border: 1px solid #e2e8f0;
-            border-radius: 16px;
+            /* เปลี่ยนจากขาวล้วน เป็นสีพื้นอ่อนๆ */
+            background: white; 
+            border: 2px solid transparent;
+            border-radius: var(--radius-md);
             padding: 1rem;
             text-align: left;
             cursor: pointer;
-            transition: all 0.2s cubic-bezier(0.25, 0.8, 0.25, 1);
-            box-shadow: 0 2px 4px rgba(0,0,0,0.02);
-            position: relative;
-            overflow: hidden;
+            transition: all 0.2s;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            
+            /* แก้ไขปุ่ม: ให้ยืดหยุ่น ไม่ตัดข้อความ */
+            display: flex;
+            flex-direction: column;
+            min-height: 80px; 
+            height: auto;
+            white-space: normal;
         }
+
+        /* เพิ่มสีสันให้ปุ่ม Level แต่ละประเภท */
+        .level-btn[data-type="1"] { background: #E3F2FD; color: #1565C0; } /* Blueish */
+        .level-btn[data-type="2"] { background: #E8F5E9; color: #2E7D32; } /* Greenish */
+        .level-btn[data-type="3"] { background: #FFF3E0; color: #E65100; } /* Orangish */
+        .level-btn[data-type="4"] { background: #F3E5F5; color: #6A1B9A; } /* Purplish */
 
         .level-btn:hover:not(:disabled) {
             transform: translateY(-3px);
-            box-shadow: 0 8px 15px rgba(0,0,0,0.08);
-            border-color: #b794f4;
+            box-shadow: 0 8px 15px rgba(0,0,0,0.1);
+            filter: brightness(0.95); /* Darken slightly on hover */
         }
-        .level-btn:active:not(:disabled) { transform: translateY(0); }
 
         .level-btn:disabled {
-            opacity: 0.6;
-            background-color: #f7fafc;
+            background: #f5f5f5;
+            color: #b0b0b0;
             cursor: not-allowed;
-            filter: grayscale(100%);
+            opacity: 0.7;
         }
 
-        .level-btn-type {
-            font-size: 0.75rem;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            color: #a0aec0;
-            font-weight: 700;
-            display: block;
-            margin-bottom: 4px;
-        }
-        
-        .level-name-main {
-            font-size: 1.1rem;
-            font-weight: 800;
-            color: #553c9a;
-            display: block;
-        }
-
-        .level-sub-detail {
-            font-size: 0.85rem;
-            color: #718096;
-            margin-top: 2px;
-            display: block;
-        }
+        .level-btn-type { font-size: 0.7rem; font-weight: 700; opacity: 0.7; margin-bottom: 5px; }
+        .level-name-main { font-size: 1.1rem; font-weight: 800; line-height: 1.2; margin-bottom: 5px;}
+        .level-sub-detail { font-size: 0.85rem; opacity: 0.9; line-height: 1.2; }
 
         /* --- Game Area --- */
+        .top-content {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
         .status-bar {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            font-size: 0.9rem;
-            font-weight: 700;
-            color: #a0aec0;
             background: white;
-            padding: 8px 16px;
-            border-radius: 30px;
+            padding: 10px 15px;
+            border-radius: 50px;
             margin-bottom: 1.5rem;
-            box-shadow: var(--shadow-soft);
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            font-weight: 700;
+            color: var(--text-grey);
+            font-size: 0.9rem;
         }
-        .score-pill { color: var(--correct-color); }
+        .score-pill { color: var(--primary-color); }
 
+        /* Question Box */
         #question-sentence {
             font-size: 1.6rem;
             font-weight: 700;
             line-height: 1.6;
             text-align: left;
-            padding: 24px;
-            background: white;
+            padding: 25px;
+            
+            /* เปลี่ยนจากขาวล้วน เป็นสีขาวอมฟ้า/ม่วงจางๆ */
+            background: linear-gradient(to bottom right, #ffffff, #f8f9fe);
+            border: 2px solid #edf2f7;
+            
             border-radius: var(--radius-xl);
-            box-shadow: var(--shadow-soft);
-            color: var(--text-main);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.03);
+            color: var(--text-dark);
             margin-bottom: 1rem;
-            position: relative;
-        }
-        
-        /* Decoration for Question Box */
-        #question-sentence::before {
-            content: '"';
-            position: absolute;
-            top: -10px;
-            left: 15px;
-            font-size: 4rem;
-            color: #e2e8f0;
-            font-family: serif;
-            line-height: 1;
+            
+            /* แก้ไข: ให้ข้อความไม่ล้น */
+            word-wrap: break-word;
         }
 
+        /* --- แก้ไขเส้นประเป็นเส้นทึบ --- */
         .blank {
-            color: #805ad5;
-            border-bottom: 3px dashed #805ad5;
-            padding: 0 8px;
+            color: var(--primary-color);
+            font-weight: 800;
+            padding: 0 5px;
+            
+            /* ลบเส้นประ */
+            text-decoration: none;
+            
+            /* ใส่เส้นทึบด้านล่าง */
+            border-bottom: 3px solid var(--primary-color);
             display: inline-block;
-            min-width: 50px;
-            text-align: center;
+            line-height: 1.2;
         }
 
         #feedback-message {
-            min-height: 24px;
-            font-size: 1rem;
+            min-height: 30px;
+            font-size: 1.1rem;
+            font-weight: 600;
             margin-bottom: 1rem;
-            transition: transform 0.3s;
+            padding: 5px;
         }
 
         /* Options Grid */
         #options-area {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 15px;
-            flex-grow: 1;
-            align-content: start;
+            gap: 12px;
+            width: 100%;
         }
 
         .option-btn {
-            background: white;
+            /* เปลี่ยนจากขาว เป็นสีม่วงอ่อน */
+            background-color: var(--primary-light); 
+            color: var(--primary-dark);
+            
             border: none;
-            border-radius: 18px;
-            padding: 15px;
-            font-size: 1.4rem;
+            border-radius: var(--radius-md);
+            padding: 15px 10px;
+            font-size: 1.3rem;
             font-weight: 700;
-            color: var(--text-main);
             cursor: pointer;
-            box-shadow: 0 4px 0 #e2e8f0; /* 3D effect bottom border */
+            box-shadow: 0 4px 0 rgba(108, 99, 255, 0.2); /* Colored shadow */
             transition: all 0.1s;
-            border: 2px solid transparent;
-            touch-action: manipulation; /* Fix touch delay */
+            
+            /* แก้ไขปุ่ม: จัดการข้อความยาว */
+            min-height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            word-break: break-word;
+            line-height: 1.2;
         }
 
         .option-btn:hover:not(:disabled) {
-            background-color: #f7fafc;
+            background-color: var(--primary-color);
+            color: white;
             transform: translateY(-2px);
-            box-shadow: 0 6px 0 #cbd5e0;
+            box-shadow: 0 6px 0 rgba(90, 82, 213, 0.4);
         }
 
         .option-btn:active:not(:disabled) {
             transform: translateY(4px);
-            box-shadow: 0 0 0 transparent;
+            box-shadow: none;
         }
 
-        /* Correct/Incorrect States */
+        /* States */
         .option-btn.correct {
-            background-color: var(--correct-color);
-            color: white;
-            box-shadow: 0 4px 0 #2f855a !important;
-            border-color: #2f855a;
-            transform: translateY(1px);
+            background-color: var(--correct-color) !important;
+            color: white !important;
+            box-shadow: 0 4px 0 #008f72 !important;
         }
         
         .option-btn.incorrect {
-            background-color: var(--wrong-color);
-            color: white;
-            box-shadow: 0 4px 0 #c53030 !important;
-            border-color: #c53030;
-            animation: shake 0.4s cubic-bezier(.36,.07,.19,.97) both;
+            background-color: var(--wrong-color) !important;
+            color: white !important;
+            box-shadow: 0 4px 0 #d63031 !important;
+            animation: shake 0.4s;
         }
 
         @keyframes shake {
-            10%, 90% { transform: translate3d(-1px, 0, 0); }
-            20%, 80% { transform: translate3d(2px, 0, 0); }
-            30%, 50%, 70% { transform: translate3d(-4px, 0, 0); }
-            40%, 60% { transform: translate3d(4px, 0, 0); }
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-5px); }
+            75% { transform: translateX(5px); }
         }
 
         /* Footer */
@@ -299,32 +299,37 @@
         }
 
         #next-btn {
-            background: var(--text-main);
+            background-color: var(--text-dark);
             color: white;
             border: none;
             width: 100%;
-            padding: 1.2rem;
+            padding: 1rem;
             border-radius: 50px;
-            font-size: 1.1rem;
+            font-size: 1.2rem;
             font-weight: 800;
             cursor: pointer;
-            box-shadow: 0 10px 20px rgba(0,0,0,0.15);
-            transition: all 0.2s;
-            letter-spacing: 1px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            transition: transform 0.1s;
         }
+        
+        #next-btn:active { transform: scale(0.98); }
+        #next-btn:disabled { background-color: #dfe6e9; color: #b2bec3; cursor: default; box-shadow: none; }
 
-        #next-btn:active { transform: scale(0.98); box-shadow: 0 5px 10px rgba(0,0,0,0.1); }
-        #next-btn:disabled { background: #cbd5e0; cursor: default; box-shadow: none; transform: none; }
-
-        /* Confetti Effect */
+        /* Confetti */
         .confetti {
             position: absolute;
-            width: 10px; height: 10px;
-            background-color: #f00;
-            animation: fall linear forwards;
+            width: 12px; height: 12px;
             z-index: 100;
+            animation: fall linear forwards;
         }
         @keyframes fall { to { transform: translateY(100vh) rotate(720deg); } }
+        
+        /* Media Query for Mobile Text Sizing */
+        @media (max-width: 400px) {
+            #question-sentence { font-size: 1.3rem; padding: 15px; }
+            .option-btn { font-size: 1.1rem; padding: 10px; }
+            header h1 { font-size: 1.5rem; }
+        }
 
     </style>
 </head>
@@ -336,9 +341,9 @@
         </header>
 
         <div id="level-select-screen" class="screen active">
-            <div style="text-align: left; padding-left: 5px;">
-                <h2>🎯 เลือกบทเรียน</h2>
-                <p>ฝึกฝนการใช้คำบุพบทตามหัวข้อ (120 ข้อ)</p>
+            <div style="text-align: left; margin-bottom: 10px;">
+                <h2 style="margin:0; color:var(--text-dark);">เลือกบทเรียน 🎯</h2>
+                <p style="margin:5px 0 0 0; color:var(--text-grey);">เลือกหัวข้อเพื่อเริ่มฝึกฝน</p>
             </div>
             <div class="level-grid" id="level-grid">
                 </div>
@@ -373,10 +378,9 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/js/all.min.js"></script>
 
     <script>
-        /* ------------------- JavaScript Core Logic (Preposition Master V6 - Optimized) ------------------- */
-
-        // --- DATA (4 Main Types x 3 Sub-Levels) ---
-        // (ใช้ชุดข้อมูลเดิมจาก V5.1 ที่ครบถ้วนแล้ว)
+        /* ------------------- Preposition Master V7 Logic ------------------- */
+        
+        // Data Structure
         const LEVEL_DATA = [
             // TYPE 1: PLACE
             { type: 1, title: "1. PLACE (ตำแหน่ง)", levels: [
@@ -537,8 +541,7 @@
         ];
 
         const QUESTIONS_PER_LEVEL = 10;
-        const OPTIONS_COUNT = 4;
-
+        
         // --- Elements ---
         const levelSelectScreen = document.getElementById('level-select-screen');
         const gameScreen = document.getElementById('game-screen');
@@ -561,7 +564,7 @@
         let currentLevelQuestions = []; 
         let isAutoModeActive = false; 
 
-        // --- TTS & Audio ---
+        // --- TTS ---
         const synth = window.speechSynthesis;
         let ttsUtterance = new SpeechSynthesisUtterance();
         ttsUtterance.lang = 'en-US'; 
@@ -574,16 +577,11 @@
                 if (maleVoice) ttsUtterance.voice = maleVoice;
             }
         }
-        
-        // Ensure voice is loaded
-        if (synth.onvoiceschanged !== undefined) {
-            synth.onvoiceschanged = initVoice;
-        }
+        if (synth.onvoiceschanged !== undefined) synth.onvoiceschanged = initVoice;
         initVoice();
 
         function speakAnswer(text, onEndCallback) {
             if (synth.speaking) synth.cancel();
-            
             ttsUtterance.text = text;
             ttsUtterance.onend = onEndCallback;
             synth.speak(ttsUtterance);
@@ -592,7 +590,7 @@
         function playSound(isCorrect) {
             const audio = isCorrect ? correctAudio : incorrectAudio;
             audio.currentTime = 0;
-            audio.play().catch(e => console.log("Audio play failed (user interaction needed):", e));
+            audio.play().catch(e => console.log("Audio play failed:", e));
         }
 
         // --- Secret Mode ---
@@ -618,12 +616,8 @@
 
         // --- Navigation ---
         function showScreen(screenEl) {
-            document.querySelectorAll('.screen').forEach(s => {
-                s.classList.remove('active');
-                s.style.opacity = 0;
-            });
+            document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
             screenEl.classList.add('active');
-            setTimeout(() => { screenEl.style.opacity = 1; }, 50); // Fade in
         }
 
         function createLevelButtons() {
@@ -632,16 +626,16 @@
                 typeData.levels.forEach(level => {
                     const btn = document.createElement('button');
                     btn.className = 'level-btn';
+                    btn.dataset.type = typeData.type; // For color styling
                     
                     btn.innerHTML = `
                         <span class="level-btn-type">${typeData.title}</span>
-                        <span class="level-name-main">Level ${typeData.type}.${level.sub} - ${level.name}</span>
+                        <span class="level-name-main">L${typeData.type}.${level.sub} - ${level.name}</span>
                         <span class="level-sub-detail">${level.detail}</span>
                     `;
                     
                     if (level.questions.length < QUESTIONS_PER_LEVEL) {
                         btn.disabled = true;
-                        btn.style.opacity = '0.6';
                         btn.innerHTML += ' <small>(Dev)</small>';
                     }
                     
@@ -673,9 +667,7 @@
             nextBtn.disabled = true;
             nextBtn.innerHTML = 'ข้อถัดไป <i class="fa-solid fa-arrow-right"></i>';
             feedbackMessageEl.textContent = 'เลือกคำตอบที่ถูกต้อง';
-            feedbackMessageEl.style.color = '#718096';
-            questionSentenceEl.innerHTML = '';
-            optionsArea.innerHTML = ''; 
+            feedbackMessageEl.style.color = 'var(--text-grey)';
             
             updateUI();
             setupQuestion();
@@ -690,18 +682,18 @@
         function setupQuestion() {
             currentQuestion = currentLevelQuestions[currentQuizIndex];
             
-            // Text formatting
-            questionSentenceEl.innerHTML = currentQuestion.sentence.replace('______', '<span class="blank">______</span>');
+            // Text formatting: Use span with solid border
+            questionSentenceEl.innerHTML = currentQuestion.sentence.replace('______', '<span class="blank">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>');
 
-            // Options generation
             let options = [currentQuestion.correct, ...currentQuestion.distractors];
-            // Ensure 4 options by borrowing from list if needed
+            // Ensure 4 options
             if (options.length < 4) {
                  const fillers = ["in", "on", "at", "to", "for", "with", "by", "of"];
                  fillers.forEach(f => { if(options.length < 4 && !options.includes(f)) options.push(f); });
             }
             options = options.sort(() => 0.5 - Math.random()).slice(0, 4);
 
+            optionsArea.innerHTML = '';
             options.forEach(prep => {
                 const btn = document.createElement('button');
                 btn.className = 'option-btn';
@@ -722,7 +714,6 @@
             const selectedBtn = e.currentTarget || document.querySelector(`.option-btn[data-is-correct="true"]`);
             const isCorrect = selectedBtn.dataset.isCorrect === 'true';
             
-            // Disable buttons
             document.querySelectorAll('.option-btn').forEach(b => b.disabled = true);
 
             if (isCorrect) {
@@ -732,24 +723,24 @@
                 feedbackMessageEl.innerHTML = `<i class="fa-solid fa-circle-check"></i> ถูกต้อง! (${currentQuestion.correct.toUpperCase()})`;
                 feedbackMessageEl.style.color = 'var(--correct-color)';
                 
-                questionSentenceEl.innerHTML = currentQuestion.sentence.replace('______', 
-                    `<span style="color:var(--correct-color); border-bottom:3px solid var(--correct-color); padding:0 5px;">${currentQuestion.correct.toUpperCase()}</span>`);
+                // Replace solid line with text
+                const correctHtml = `<span style="color:var(--correct-color); border-bottom:3px solid var(--correct-color);">${currentQuestion.correct.toUpperCase()}</span>`;
+                questionSentenceEl.innerHTML = currentQuestion.sentence.replace('______', correctHtml);
             } else {
                 playSound(false);
                 selectedBtn.classList.add('incorrect');
                 const correctBtn = document.querySelector(`.option-btn[data-is-correct="true"]`);
-                if(correctBtn) correctBtn.classList.add('correct'); // Show correct one
+                if(correctBtn) correctBtn.classList.add('correct'); 
 
                 feedbackMessageEl.innerHTML = `<i class="fa-solid fa-circle-xmark"></i> ผิด! คำตอบคือ ${currentQuestion.correct.toUpperCase()}`;
                 feedbackMessageEl.style.color = 'var(--wrong-color)';
                 
-                questionSentenceEl.innerHTML = currentQuestion.sentence.replace('______', 
-                    `<span style="color:var(--wrong-color); border-bottom:3px solid var(--wrong-color); padding:0 5px;">${selectedBtn.dataset.preposition.toUpperCase()}</span>`);
+                const wrongHtml = `<span style="color:var(--wrong-color); border-bottom:3px solid var(--wrong-color);">${selectedBtn.dataset.preposition.toUpperCase()}</span>`;
+                questionSentenceEl.innerHTML = currentQuestion.sentence.replace('______', wrongHtml);
             }
 
             updateUI();
             
-            // TTS and Auto-Next
             speakAnswer(currentQuestion.ttsContext, () => {
                 setTimeout(() => {
                     nextBtn.disabled = false;
@@ -761,7 +752,6 @@
         function endGame() {
             if (synth.speaking) synth.cancel();
             
-            // Victory Confetti
             createConfetti();
 
             levelTitleEl.textContent = `Completed!`;
@@ -769,19 +759,18 @@
             
             feedbackMessageEl.innerHTML = `
                 <div style="font-size:3rem; margin-bottom:10px;">🏆</div>
-                <span style="font-size:1.8rem; font-weight:800; color:var(--text-main);">
-                    คะแนนของคุณ: <span style="color:var(--correct-color)">${score}</span> / ${currentLevelQuestions.length}
+                <span style="font-size:1.8rem; font-weight:800; color:var(--text-dark);">
+                    คะแนน: <span style="color:var(--correct-color)">${score}</span> / ${currentLevelQuestions.length}
                 </span>
-                <p style="margin-top:10px">เก่งมาก! ฝึกฝนบ่อยๆ เพื่อความเป็นเลิศ</p>
             `;
             
             optionsArea.innerHTML = '';
-            questionSentenceEl.innerHTML = '<span style="color:#a0aec0; font-size:1.2rem">บทเรียนจบแล้ว</span>';
+            questionSentenceEl.innerHTML = '<span style="color:var(--text-grey); font-size:1.2rem">บทเรียนจบแล้ว</span>';
             questionSentenceEl.style.textAlign = 'center';
             questionSentenceEl.style.display = 'flex';
             questionSentenceEl.style.justifyContent = 'center';
             questionSentenceEl.style.alignItems = 'center';
-            questionSentenceEl.style.height = '150px';
+            questionSentenceEl.style.minHeight = '100px';
 
             nextBtn.disabled = false;
             nextBtn.innerHTML = '<i class="fa-solid fa-house"></i> กลับหน้าหลัก';
@@ -791,7 +780,6 @@
             };
         }
 
-        // Simple Confetti
         function createConfetti() {
             for(let i=0; i<30; i++) {
                 const conf = document.createElement('div');
@@ -804,10 +792,8 @@
             }
         }
 
-        // Init
         headerTitleEl.addEventListener('dblclick', toggleAutoMode);
         
-        // Prevent nextBtn default binding override in endGame
         const defaultNextAction = () => {
              if (currentQuizIndex >= currentLevelQuestions.length) {
                 showScreen(levelSelectScreen);
