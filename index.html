@@ -3,33 +3,24 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Preposition Master V7</title>
+    <title>Preposition Master V7.1</title>
     <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@400;600;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 
     <style>
         /* --- Color Palette & Variables --- */
         :root {
-            /* Main Theme Colors */
-            --primary-color: #6C63FF; /* Vibrant Purple */
+            --primary-color: #6C63FF; 
             --primary-dark: #5a52d5;
-            --primary-light: #EEF2FF; /* Very light purple for backgrounds */
-            
-            --secondary-color: #FF6584; /* Pink Accent */
-            
-            --correct-color: #00B894; /* Mint Green */
-            --wrong-color: #FF7675;   /* Soft Red */
-            
+            --primary-light: #EEF2FF;
+            --secondary-color: #FF6584;
+            --correct-color: #00B894;
+            --wrong-color: #FF7675;
             --bg-gradient: linear-gradient(135deg, #a8c0ff 0%, #3f2b96 100%);
-            
             --text-dark: #2D3436;
             --text-grey: #636E72;
-            --text-white: #FFFFFF;
-
             --radius-xl: 24px;
             --radius-md: 16px;
-            --shadow-card: 0 10px 20px rgba(0,0,0,0.15);
-            --shadow-btn: 0 4px 0 rgba(0,0,0,0.1);
         }
 
         body {
@@ -46,29 +37,22 @@
             overflow-x: hidden;
         }
 
-        /* --- Main Container --- */
         .container {
             width: 95%;
             max-width: 500px;
             height: 92vh;
             max-height: 900px;
-            
-            /* ลดความขาวลง ใช้สีขาวโปร่งแสงเล็กน้อย เพื่อให้เห็นสีพื้นหลังจางๆ */
             background-color: rgba(255, 255, 255, 0.92);
             backdrop-filter: blur(10px);
-            
             border-radius: var(--radius-xl);
             box-shadow: 0 25px 50px rgba(0,0,0,0.3);
-            
             display: flex;
             flex-direction: column;
             overflow: hidden;
             position: relative;
         }
 
-        /* --- Header --- */
         header {
-            /* เพิ่มสีพื้นหลังให้ส่วนหัว ไม่ให้ดูขาวล้วน */
             background: var(--primary-light);
             padding: 1.5rem 1rem 1rem 1rem;
             border-bottom: 2px solid rgba(108, 99, 255, 0.1);
@@ -87,7 +71,6 @@
             transition: transform 0.2s;
         }
         
-        /* Auto Mode Animation */
         @keyframes pulse-active {
             0% { transform: scale(1); filter: brightness(1); }
             50% { transform: scale(1.05); filter: brightness(1.2); color: #FFD700; }
@@ -97,32 +80,26 @@
             animation: pulse-active 2s infinite ease-in-out;
         }
 
-        /* --- Screens --- */
         .screen {
             padding: 1rem;
             display: none; 
             flex-grow: 1;
             flex-direction: column;
             justify-content: space-between;
-            overflow-y: auto; /* Allow scroll if content is long */
+            overflow-y: auto; 
         }
         .screen.active { display: flex; }
 
-        /* --- Level Grid (Colorful Cards) --- */
+        /* Level Grid */
         .level-grid {
             display: grid;
-            grid-template-columns: 1fr; /* Default 1 column on very small screens */
+            grid-template-columns: 1fr;
             gap: 12px;
             padding: 10px 5px;
         }
-        
-        /* Responsive Grid: 2 columns on slightly wider screens */
-        @media (min-width: 350px) {
-            .level-grid { grid-template-columns: 1fr 1fr; }
-        }
+        @media (min-width: 350px) { .level-grid { grid-template-columns: 1fr 1fr; } }
 
         .level-btn {
-            /* เปลี่ยนจากขาวล้วน เป็นสีพื้นอ่อนๆ */
             background: white; 
             border: 2px solid transparent;
             border-radius: var(--radius-md);
@@ -131,8 +108,6 @@
             cursor: pointer;
             transition: all 0.2s;
             box-shadow: 0 4px 6px rgba(0,0,0,0.05);
-            
-            /* แก้ไขปุ่ม: ให้ยืดหยุ่น ไม่ตัดข้อความ */
             display: flex;
             flex-direction: column;
             min-height: 80px; 
@@ -140,16 +115,15 @@
             white-space: normal;
         }
 
-        /* เพิ่มสีสันให้ปุ่ม Level แต่ละประเภท */
-        .level-btn[data-type="1"] { background: #E3F2FD; color: #1565C0; } /* Blueish */
-        .level-btn[data-type="2"] { background: #E8F5E9; color: #2E7D32; } /* Greenish */
-        .level-btn[data-type="3"] { background: #FFF3E0; color: #E65100; } /* Orangish */
-        .level-btn[data-type="4"] { background: #F3E5F5; color: #6A1B9A; } /* Purplish */
+        .level-btn[data-type="1"] { background: #E3F2FD; color: #1565C0; }
+        .level-btn[data-type="2"] { background: #E8F5E9; color: #2E7D32; }
+        .level-btn[data-type="3"] { background: #FFF3E0; color: #E65100; }
+        .level-btn[data-type="4"] { background: #F3E5F5; color: #6A1B9A; }
 
         .level-btn:hover:not(:disabled) {
             transform: translateY(-3px);
             box-shadow: 0 8px 15px rgba(0,0,0,0.1);
-            filter: brightness(0.95); /* Darken slightly on hover */
+            filter: brightness(0.95);
         }
 
         .level-btn:disabled {
@@ -163,12 +137,8 @@
         .level-name-main { font-size: 1.1rem; font-weight: 800; line-height: 1.2; margin-bottom: 5px;}
         .level-sub-detail { font-size: 0.85rem; opacity: 0.9; line-height: 1.2; }
 
-        /* --- Game Area --- */
-        .top-content {
-            flex-grow: 1;
-            display: flex;
-            flex-direction: column;
-        }
+        /* Game Area */
+        .top-content { flex-grow: 1; display: flex; flex-direction: column; }
 
         .status-bar {
             display: flex;
@@ -185,37 +155,26 @@
         }
         .score-pill { color: var(--primary-color); }
 
-        /* Question Box */
         #question-sentence {
             font-size: 1.6rem;
             font-weight: 700;
             line-height: 1.6;
             text-align: left;
             padding: 25px;
-            
-            /* เปลี่ยนจากขาวล้วน เป็นสีขาวอมฟ้า/ม่วงจางๆ */
             background: linear-gradient(to bottom right, #ffffff, #f8f9fe);
             border: 2px solid #edf2f7;
-            
             border-radius: var(--radius-xl);
             box-shadow: 0 5px 15px rgba(0,0,0,0.03);
             color: var(--text-dark);
             margin-bottom: 1rem;
-            
-            /* แก้ไข: ให้ข้อความไม่ล้น */
             word-wrap: break-word;
         }
 
-        /* --- แก้ไขเส้นประเป็นเส้นทึบ --- */
         .blank {
             color: var(--primary-color);
             font-weight: 800;
             padding: 0 5px;
-            
-            /* ลบเส้นประ */
             text-decoration: none;
-            
-            /* ใส่เส้นทึบด้านล่าง */
             border-bottom: 3px solid var(--primary-color);
             display: inline-block;
             line-height: 1.2;
@@ -229,7 +188,6 @@
             padding: 5px;
         }
 
-        /* Options Grid */
         #options-area {
             display: grid;
             grid-template-columns: 1fr 1fr;
@@ -238,20 +196,16 @@
         }
 
         .option-btn {
-            /* เปลี่ยนจากขาว เป็นสีม่วงอ่อน */
             background-color: var(--primary-light); 
             color: var(--primary-dark);
-            
             border: none;
             border-radius: var(--radius-md);
             padding: 15px 10px;
             font-size: 1.3rem;
             font-weight: 700;
             cursor: pointer;
-            box-shadow: 0 4px 0 rgba(108, 99, 255, 0.2); /* Colored shadow */
+            box-shadow: 0 4px 0 rgba(108, 99, 255, 0.2);
             transition: all 0.1s;
-            
-            /* แก้ไขปุ่ม: จัดการข้อความยาว */
             min-height: 60px;
             display: flex;
             align-items: center;
@@ -272,7 +226,6 @@
             box-shadow: none;
         }
 
-        /* States */
         .option-btn.correct {
             background-color: var(--correct-color) !important;
             color: white !important;
@@ -292,11 +245,7 @@
             75% { transform: translateX(5px); }
         }
 
-        /* Footer */
-        #game-footer {
-            margin-top: auto;
-            padding-top: 1rem;
-        }
+        #game-footer { margin-top: auto; padding-top: 1rem; }
 
         #next-btn {
             background-color: var(--text-dark);
@@ -315,7 +264,6 @@
         #next-btn:active { transform: scale(0.98); }
         #next-btn:disabled { background-color: #dfe6e9; color: #b2bec3; cursor: default; box-shadow: none; }
 
-        /* Confetti */
         .confetti {
             position: absolute;
             width: 12px; height: 12px;
@@ -324,7 +272,6 @@
         }
         @keyframes fall { to { transform: translateY(100vh) rotate(720deg); } }
         
-        /* Media Query for Mobile Text Sizing */
         @media (max-width: 400px) {
             #question-sentence { font-size: 1.3rem; padding: 15px; }
             .option-btn { font-size: 1.1rem; padding: 10px; }
@@ -378,7 +325,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/js/all.min.js"></script>
 
     <script>
-        /* ------------------- Preposition Master V7 Logic ------------------- */
+        /* ------------------- Preposition Master V7.1 Logic ------------------- */
         
         // Data Structure
         const LEVEL_DATA = [
@@ -626,7 +573,7 @@
                 typeData.levels.forEach(level => {
                     const btn = document.createElement('button');
                     btn.className = 'level-btn';
-                    btn.dataset.type = typeData.type; // For color styling
+                    btn.dataset.type = typeData.type; 
                     
                     btn.innerHTML = `
                         <span class="level-btn-type">${typeData.title}</span>
@@ -647,6 +594,9 @@
 
         // --- Game Logic ---
         function startLevel(typeId, subId) {
+            // FIX: Reset nextBtn handler to default quiz logic when starting a level
+            nextBtn.onclick = handleNextQuestion; 
+
             currentLevelData = LEVEL_DATA.find(d => d.type === typeId);
             currentSubLevel = currentLevelData.levels.find(l => l.sub === subId);
             currentLevelQuestions = [...currentSubLevel.questions].sort(() => 0.5 - Math.random());
@@ -655,6 +605,15 @@
             
             showScreen(gameScreen);
             nextQuestion();
+        }
+
+        function handleNextQuestion() {
+            if (currentQuizIndex >= currentLevelQuestions.length) {
+                showScreen(levelSelectScreen); // Fallback
+            } else {
+                currentQuizIndex++;
+                nextQuestion();
+            }
         }
 
         function nextQuestion() {
@@ -682,11 +641,9 @@
         function setupQuestion() {
             currentQuestion = currentLevelQuestions[currentQuizIndex];
             
-            // Text formatting: Use span with solid border
             questionSentenceEl.innerHTML = currentQuestion.sentence.replace('______', '<span class="blank">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>');
 
             let options = [currentQuestion.correct, ...currentQuestion.distractors];
-            // Ensure 4 options
             if (options.length < 4) {
                  const fillers = ["in", "on", "at", "to", "for", "with", "by", "of"];
                  fillers.forEach(f => { if(options.length < 4 && !options.includes(f)) options.push(f); });
@@ -723,7 +680,6 @@
                 feedbackMessageEl.innerHTML = `<i class="fa-solid fa-circle-check"></i> ถูกต้อง! (${currentQuestion.correct.toUpperCase()})`;
                 feedbackMessageEl.style.color = 'var(--correct-color)';
                 
-                // Replace solid line with text
                 const correctHtml = `<span style="color:var(--correct-color); border-bottom:3px solid var(--correct-color);">${currentQuestion.correct.toUpperCase()}</span>`;
                 questionSentenceEl.innerHTML = currentQuestion.sentence.replace('______', correctHtml);
             } else {
@@ -774,6 +730,8 @@
 
             nextBtn.disabled = false;
             nextBtn.innerHTML = '<i class="fa-solid fa-house"></i> กลับหน้าหลัก';
+            
+            // Override nextBtn for 'Back to Home'
             nextBtn.onclick = () => {
                 if (isAutoModeActive) toggleAutoMode();
                 showScreen(levelSelectScreen);
@@ -794,15 +752,8 @@
 
         headerTitleEl.addEventListener('dblclick', toggleAutoMode);
         
-        const defaultNextAction = () => {
-             if (currentQuizIndex >= currentLevelQuestions.length) {
-                showScreen(levelSelectScreen);
-            } else {
-                currentQuizIndex++;
-                nextQuestion();
-            }
-        };
-        nextBtn.onclick = defaultNextAction;
+        // Initial setup for nextBtn
+        nextBtn.onclick = handleNextQuestion;
 
         createLevelButtons();
     </script>
