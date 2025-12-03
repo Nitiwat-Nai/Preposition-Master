@@ -3,257 +3,293 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Preposition Master V10</title>
+    <title>Preposition Master V11</title>
     <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@400;600;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 
     <style>
         /* --- Color Palette & Variables --- */
         :root {
-            --primary-color: #6C63FF; 
-            --bg-gradient: linear-gradient(135deg, #a8c0ff 0%, #3f2b96 100%);
-            --text-dark: #2D3436;
-            --text-grey: #636E72;
-            --radius-xl: 24px;
+            --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --header-gradient: linear-gradient(to right, #6a11cb 0%, #2575fc 100%);
+            
+            --correct-color: #00b894;
+            --wrong-color: #ff7675;
+            
+            --text-main: #2d3436;
+            --text-light: #636e72;
+            --bg-color: #f3f6fd;
+            
             --radius-md: 16px;
-            --correct-color: #00B894;
-            --wrong-color: #FF7675;
+            --radius-lg: 24px;
         }
 
-        /* Dynamic Theme Variables */
-        :root {
-            --theme-bg: #EEF2FF;
-            --theme-text: #2D3436;
-            --theme-accent: #6C63FF;
-        }
-
+        /* Reset & Base Styles */
         * {
-            -webkit-tap-highlight-color: transparent; /* ปิดไฮไลท์สีเทาเวลาแตะบนมือถือ */
-            outline: none; /* ปิดเส้นขอบเวลาโฟกัส */
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+            outline: none;
         }
 
         body {
             font-family: 'Sarabun', sans-serif;
-            background: var(--bg-gradient);
-            color: var(--text-dark);
+            background-color: var(--bg-color);
+            /* เพิ่มลวดลายจุดจางๆ ให้พื้นหลังดูไม่จืด */
+            background-image: radial-gradient(#dfe6e9 1px, transparent 1px);
+            background-size: 20px 20px;
+            
+            color: var(--text-main);
             margin: 0;
             padding: 0;
             display: flex;
             justify-content: center;
             align-items: center;
             min-height: 100vh;
-            text-align: center;
-            overflow-x: hidden;
+            overflow: hidden; /* ป้องกันการเลื่อนทั้งหน้า */
         }
 
+        /* --- Main Container --- */
         .container {
-            width: 95%;
-            max-width: 500px;
-            height: 92vh;
-            max-height: 900px;
-            background-color: rgba(255, 255, 255, 0.92);
-            backdrop-filter: blur(10px);
-            border-radius: var(--radius-xl);
-            box-shadow: 0 25px 50px rgba(0,0,0,0.3);
+            width: 100%;
+            height: 100vh; /* เต็มจอ */
+            background-color: #ffffff;
+            
             display: flex;
             flex-direction: column;
             overflow: hidden;
             position: relative;
         }
 
+        /* Responsive: บนจอใหญ่ ให้มีกรอบเหมือนเดิม แต่บนมือถือให้เต็มจอ */
+        @media (min-width: 600px) {
+            .container {
+                max-width: 480px;
+                height: 90vh;
+                max-height: 900px;
+                border-radius: var(--radius-lg);
+                box-shadow: 0 20px 50px rgba(0,0,0,0.2);
+            }
+        }
+
+        /* --- Header (Colorful) --- */
         header {
-            background: white;
-            padding: 1.5rem 1rem 1rem 1rem;
-            border-bottom: 2px solid rgba(0,0,0,0.05);
+            background: var(--header-gradient);
+            padding: 1rem;
+            text-align: center;
+            box-shadow: 0 4px 15px rgba(37, 117, 252, 0.2);
+            z-index: 10;
         }
         
         header h1 {
-            font-size: 1.8rem;
+            font-size: 1.5rem;
             font-weight: 800;
             margin: 0;
-            color: var(--primary-color);
+            color: #ffffff; /* ตัวหนังสือขาว */
             text-transform: uppercase;
             letter-spacing: 1px;
             cursor: pointer;
             user-select: none;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.2);
             transition: transform 0.2s;
         }
         
-        @keyframes pulse-active {
-            0% { transform: scale(1); filter: brightness(1); }
-            50% { transform: scale(1.05); filter: brightness(1.2); color: #FFD700; }
-            100% { transform: scale(1); filter: brightness(1); }
+        @keyframes pulse-gold {
+            0%, 100% { transform: scale(1); text-shadow: 0 2px 4px rgba(0,0,0,0.2); }
+            50% { transform: scale(1.05); color: #ffeaa7; text-shadow: 0 0 10px rgba(255, 234, 167, 0.8); }
         }
         .auto-active {
-            animation: pulse-active 2s infinite ease-in-out;
+            animation: pulse-gold 2s infinite ease-in-out;
         }
 
+        /* --- Screens --- */
         .screen {
-            padding: 1rem;
-            display: none; 
             flex-grow: 1;
+            display: none; 
             flex-direction: column;
-            justify-content: space-between;
-            overflow-y: auto; 
+            padding: 1.5rem;
+            overflow-y: auto;
+            background: linear-gradient(to bottom, #ffffff 0%, #f8f9fa 100%);
         }
         .screen.active { display: flex; }
 
-        /* Level Grid */
+        /* --- Level Selection (Colorful Cards) --- */
+        .section-title {
+            margin-bottom: 15px;
+        }
+        .section-title h2 { margin: 0; font-size: 1.4rem; color: #2d3436; }
+        .section-title p { margin: 5px 0 0; font-size: 0.9rem; color: #636e72; }
+
         .level-grid {
             display: grid;
             grid-template-columns: 1fr;
-            gap: 12px;
-            padding: 10px 5px;
+            gap: 15px;
+            padding-bottom: 20px;
         }
-        @media (min-width: 350px) { .level-grid { grid-template-columns: 1fr 1fr; } }
+        @media (min-width: 360px) { .level-grid { grid-template-columns: 1fr 1fr; } }
 
         .level-btn {
             background: white; 
-            border: 2px solid transparent;
+            border: none;
             border-radius: var(--radius-md);
-            padding: 1rem;
+            padding: 1.2rem 1rem;
             text-align: left;
             cursor: pointer;
-            transition: transform 0.2s; /* เอา filter ออกจาก transition หลัก */
-            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+            transition: transform 0.2s, box-shadow 0.2s;
+            position: relative;
+            overflow: hidden;
+            
             display: flex;
             flex-direction: column;
-            min-height: 80px; 
-            height: auto;
-            white-space: normal;
+            justify-content: center;
+            min-height: 100px;
         }
 
-        .level-btn[data-type="1"] { background: #E3F2FD; color: #1565C0; }
-        .level-btn[data-type="2"] { background: #E8F5E9; color: #2E7D32; }
-        .level-btn[data-type="3"] { background: #FFF3E0; color: #E65100; }
-        .level-btn[data-type="4"] { background: #F3E5F5; color: #6A1B9A; }
-
-        /* ใช้ media query เพื่อให้ effect hover เกิดเฉพาะบน PC ที่มีเมาส์ */
-        @media (hover: hover) {
-            .level-btn:hover:not(:disabled) {
-                transform: translateY(-3px);
-                box-shadow: 0 8px 15px rgba(0,0,0,0.1);
-                filter: brightness(0.95);
-            }
-            
-            .option-btn:hover:not(:disabled) {
-                filter: brightness(0.95);
-                transform: translateY(-2px);
-                box-shadow: 0 6px 0 rgba(0,0,0,0.15);
-            }
+        /* เพิ่มแถบสีด้านข้างให้ดูสวยงาม */
+        .level-btn::before {
+            content: '';
+            position: absolute;
+            left: 0; top: 0; bottom: 0;
+            width: 6px;
+            background: #ccc;
         }
 
-        .level-btn:disabled {
-            background: #f5f5f5;
-            color: #b0b0b0;
-            cursor: not-allowed;
-            opacity: 0.7;
-        }
+        /* Specific Level Themes */
+        .level-btn[data-type="1"] { background: #f0f7ff; } 
+        .level-btn[data-type="1"]::before { background: #4facfe; }
+        .level-btn[data-type="1"] .level-name-main { color: #0052d4; }
 
-        .level-btn-type { font-size: 0.7rem; font-weight: 700; opacity: 0.7; margin-bottom: 5px; }
-        .level-name-main { font-size: 1.1rem; font-weight: 800; line-height: 1.2; margin-bottom: 5px;}
-        .level-sub-detail { font-size: 0.85rem; opacity: 0.9; line-height: 1.2; }
+        .level-btn[data-type="2"] { background: #f0fff4; }
+        .level-btn[data-type="2"]::before { background: #43e97b; }
+        .level-btn[data-type="2"] .level-name-main { color: #0ba360; }
 
-        /* Theme Styles */
-        .theme-type-1 { --theme-bg: #E3F2FD; --theme-text: #1565C0; --theme-accent: #1976D2; }
-        .theme-type-2 { --theme-bg: #E8F5E9; --theme-text: #2E7D32; --theme-accent: #388E3C; }
-        .theme-type-3 { --theme-bg: #FFF3E0; --theme-text: #E65100; --theme-accent: #F57C00; }
-        .theme-type-4 { --theme-bg: #F3E5F5; --theme-text: #6A1B9A; --theme-accent: #7B1FA2; }
+        .level-btn[data-type="3"] { background: #fff8f0; }
+        .level-btn[data-type="3"]::before { background: #fa709a; }
+        .level-btn[data-type="3"] .level-name-main { color: #e65100; }
 
-        /* Game UI */
+        .level-btn[data-type="4"] { background: #fbf5ff; }
+        .level-btn[data-type="4"]::before { background: #a18cd1; }
+        .level-btn[data-type="4"] .level-name-main { color: #6a1b9a; }
+
+        .level-btn:active:not(:disabled) { transform: scale(0.98); }
+        .level-btn:disabled { opacity: 0.6; filter: grayscale(1); }
+
+        .level-btn-type { font-size: 0.75rem; font-weight: 700; text-transform: uppercase; opacity: 0.6; margin-bottom: 5px; }
+        .level-name-main { font-size: 1.1rem; font-weight: 800; margin-bottom: 3px; }
+        .level-sub-detail { font-size: 0.85rem; color: #636e72; }
+
+        /* --- Game Play Area --- */
         .top-content { flex-grow: 1; display: flex; flex-direction: column; }
 
         .status-bar {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            background: var(--theme-bg);
-            padding: 10px 15px;
+            background: #ffffff;
+            padding: 8px 16px;
             border-radius: 50px;
-            margin-bottom: 1.5rem;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            margin-bottom: 20px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
             font-weight: 700;
-            color: var(--theme-text);
             font-size: 0.9rem;
-            transition: all 0.3s;
+            color: #636e72;
+            border: 1px solid #eee;
         }
-        .score-pill { color: var(--theme-accent); }
+        .score-pill { 
+            background: #e0f2f1; 
+            color: #009688; 
+            padding: 2px 10px; 
+            border-radius: 10px; 
+        }
 
         #question-sentence {
-            font-size: 1.6rem;
+            font-size: 1.5rem; /* ปรับขนาดให้อ่านง่ายบนมือถือ */
             font-weight: 700;
             line-height: 1.6;
             text-align: left;
             padding: 25px;
-            background: var(--theme-bg);
-            color: var(--theme-text);
-            border: 2px solid rgba(0,0,0,0.05);
-            border-radius: var(--radius-xl);
-            box-shadow: 0 5px 15px rgba(0,0,0,0.03);
-            margin-bottom: 1rem;
-            word-wrap: break-word;
-            transition: all 0.3s;
+            background: #ffffff;
+            border-radius: var(--radius-lg);
+            /* ใส่เงาและขอบสีให้ดูเด่น */
+            box-shadow: 0 10px 30px rgba(0,0,0,0.08); 
+            border-left: 5px solid var(--primary-color, #6C63FF);
+            margin-bottom: 20px;
+            color: #2d3436;
         }
 
+        /* ขีดเติมคำที่ระดับเดียวกับตัวอักษร */
         .blank {
-            color: var(--theme-accent);
+            color: #6c5ce7;
             font-weight: 800;
-            padding: 0 2px;
-            text-decoration: none;
-            border-bottom: 3px solid var(--theme-accent);
+            padding: 0 4px;
+            border-bottom: 3px solid #6c5ce7;
             display: inline;
             line-height: inherit;
         }
 
         #feedback-message {
-            min-height: 30px;
-            font-size: 1.1rem;
+            min-height: 24px;
+            font-size: 1rem;
             font-weight: 600;
-            margin-bottom: 1rem;
-            padding: 5px;
+            margin-bottom: 15px;
+            text-align: center;
+            color: #b2bec3;
         }
 
         #options-area {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 12px;
+            gap: 15px;
             width: 100%;
         }
 
         .option-btn {
-            background-color: var(--theme-bg);
-            color: var(--theme-text);
-            border: none;
+            background-color: #ffffff;
+            color: #2d3436;
+            border: 2px solid #f1f2f6; /* ขอบบางๆ */
             border-radius: var(--radius-md);
-            padding: 15px 10px;
+            padding: 15px;
             font-size: 1.3rem;
             font-weight: 700;
             cursor: pointer;
-            box-shadow: 0 4px 0 rgba(0,0,0,0.1);
+            box-shadow: 0 4px 0 #dfe6e9; /* เงาแบบปุ่มนูน */
             transition: all 0.1s;
-            min-height: 60px;
+            min-height: 70px;
             display: flex;
             align-items: center;
             justify-content: center;
             word-break: break-word;
-            line-height: 1.2;
         }
 
-        /* Active State (Click) */
+        /* Hover only on Desktop */
+        @media (hover: hover) {
+            .option-btn:hover:not(:disabled) {
+                border-color: #a29bfe;
+                color: #6c5ce7;
+                transform: translateY(-2px);
+            }
+        }
+
+        /* Active / Click State */
         .option-btn:active:not(:disabled), .option-btn.simulated-active {
             transform: translateY(4px);
             box-shadow: none;
+            border-color: #a29bfe;
+            background-color: #f8f9fa;
         }
 
+        /* Correct / Incorrect */
         .option-btn.correct {
             background-color: var(--correct-color) !important;
             color: white !important;
+            border-color: var(--correct-color) !important;
             box-shadow: 0 4px 0 #008f72 !important;
         }
         
         .option-btn.incorrect {
             background-color: var(--wrong-color) !important;
             color: white !important;
+            border-color: var(--wrong-color) !important;
             box-shadow: 0 4px 0 #d63031 !important;
             animation: shake 0.4s;
         }
@@ -264,47 +300,47 @@
             75% { transform: translateX(5px); }
         }
 
+        /* Footer & Next Button */
         #game-footer { margin-top: auto; padding-top: 1rem; }
 
         #next-btn {
-            background-color: var(--text-dark);
+            background: linear-gradient(to right, #6a11cb 0%, #2575fc 100%);
             color: white;
             border: none;
             width: 100%;
-            padding: 1rem;
+            padding: 1.2rem;
             border-radius: 50px;
             font-size: 1.2rem;
             font-weight: 800;
             cursor: pointer;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
-            transition: transform 0.1s, background-color 0.2s;
+            box-shadow: 0 10px 20px rgba(37, 117, 252, 0.3);
+            transition: transform 0.1s, box-shadow 0.2s;
         }
         
         #next-btn:active, #next-btn.simulated-click { 
-            transform: scale(0.98); 
-            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+            transform: scale(0.97); 
+            box-shadow: 0 4px 10px rgba(37, 117, 252, 0.2);
         }
         
-        #next-btn:disabled { opacity: 1; cursor: default; }
+        /* Auto Mode Button State */
+        #next-btn:disabled { 
+            opacity: 1; /* Keep it visible/colorful even if disabled */
+            cursor: default;
+        }
+        /* Visual disable for manual mode only */
         .manual-disabled {
-            background-color: #dfe6e9 !important;
+            background: #dfe6e9 !important;
             color: #b2bec3 !important;
             box-shadow: none !important;
         }
 
         .confetti {
             position: absolute;
-            width: 12px; height: 12px;
+            width: 10px; height: 10px;
             z-index: 100;
             animation: fall linear forwards;
         }
         @keyframes fall { to { transform: translateY(100vh) rotate(720deg); } }
-        
-        @media (max-width: 400px) {
-            #question-sentence { font-size: 1.3rem; padding: 15px; }
-            .option-btn { font-size: 1.1rem; padding: 10px; }
-            header h1 { font-size: 1.5rem; }
-        }
 
     </style>
 </head>
@@ -316,9 +352,9 @@
         </header>
 
         <div id="level-select-screen" class="screen active">
-            <div style="text-align: left; margin-bottom: 10px;">
-                <h2 style="margin:0; color:var(--text-dark);">เลือกบทเรียน 🎯</h2>
-                <p style="margin:5px 0 0 0; color:var(--text-grey);">เลือกหัวข้อเพื่อเริ่มฝึกฝน</p>
+            <div class="section-title">
+                <h2>เลือกบทเรียน 🎯</h2>
+                <p>เลือกหัวข้อเพื่อเริ่มฝึกฝน (120 ข้อ)</p>
             </div>
             <div class="level-grid" id="level-grid">
                 </div>
@@ -329,7 +365,7 @@
                 <div class="status-bar">
                     <span id="level-title">Level 1</span>
                     <span id="q-count">1/10</span>
-                    <span class="score-pill" id="score">Score: 0</span>
+                    <span class="score-pill" id="score">0 คะแนน</span>
                 </div>
 
                 <div id="prompt-area">
@@ -353,7 +389,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/js/all.min.js"></script>
 
     <script>
-        /* ------------------- Preposition Master V10 Logic ------------------- */
+        /* ------------------- Preposition Master V11 Logic ------------------- */
         
         const LEVEL_DATA = [
             // TYPE 1: PLACE
@@ -528,8 +564,7 @@
         const optionsArea = document.getElementById('options-area');
         const nextBtn = document.getElementById('next-btn');
         const headerTitleEl = document.querySelector('header h1'); 
-        const gameContainerEl = document.querySelector('.container');
-
+        
         const correctAudio = document.getElementById('correct-audio');
         const incorrectAudio = document.getElementById('incorrect-audio');
 
@@ -565,11 +600,7 @@
             };
             ttsUtterance.addEventListener('end', handleEnd);
             
-            // Backup logic in case of event fail
-            setTimeout(() => {
-                if(synth.speaking) {} 
-            }, 5000);
-
+            setTimeout(() => { if(synth.speaking) {} }, 5000);
             synth.speak(ttsUtterance);
         }
 
@@ -613,11 +644,6 @@
             screenEl.classList.add('active');
         }
 
-        function setGameTheme(typeId) {
-            gameContainerEl.classList.remove('theme-type-1', 'theme-type-2', 'theme-type-3', 'theme-type-4');
-            gameContainerEl.classList.add(`theme-type-${typeId}`);
-        }
-
         function createLevelButtons() {
             levelGridEl.innerHTML = '';
             LEVEL_DATA.forEach(typeData => {
@@ -646,7 +672,6 @@
         // --- Game Logic ---
         function startLevel(typeId, subId) {
             nextBtn.onclick = handleNextQuestion; 
-            setGameTheme(typeId); 
 
             currentLevelData = LEVEL_DATA.find(d => d.type === typeId);
             currentSubLevel = currentLevelData.levels.find(l => l.sub === subId);
@@ -675,19 +700,18 @@
             
             isAnswered = false;
             
-            // Clear focus to prevent sticky grey highlight
+            // Clean styles (prevent flexbox bugs from previous end screen)
+            questionSentenceEl.removeAttribute('style');
             if(document.activeElement) document.activeElement.blur();
 
-            // Fix: Reset Styles set by EndGame to prevent flexbox distortion
-            questionSentenceEl.removeAttribute('style');
-
             nextBtn.disabled = true; 
+            // Manual mode gets gray, Auto mode stays colorful
             if(!isAutoModeActive) nextBtn.classList.add('manual-disabled');
             else nextBtn.classList.remove('manual-disabled');
 
             nextBtn.innerHTML = 'ข้อถัดไป <i class="fa-solid fa-arrow-right"></i>';
             feedbackMessageEl.textContent = 'เลือกคำตอบที่ถูกต้อง';
-            feedbackMessageEl.style.color = 'var(--text-grey)';
+            feedbackMessageEl.style.color = '#b2bec3';
             
             updateUI();
             setupQuestion();
@@ -696,7 +720,7 @@
         function updateUI() {
             levelTitleEl.textContent = `L${currentLevelData.type}.${currentSubLevel.sub}`;
             qCountEl.textContent = `${currentQuizIndex + 1}/${currentLevelQuestions.length}`;
-            scoreEl.textContent = `Score: ${score}`;
+            scoreEl.textContent = `${score} คะแนน`;
         }
 
         function setupQuestion() {
@@ -784,14 +808,13 @@
             
             feedbackMessageEl.innerHTML = `
                 <div style="font-size:3rem; margin-bottom:10px;">🏆</div>
-                <span style="font-size:1.8rem; font-weight:800; color:var(--text-dark);">
+                <span style="font-size:1.8rem; font-weight:800; color:var(--text-main);">
                     คะแนน: <span style="color:var(--correct-color)">${score}</span> / ${currentLevelQuestions.length}
                 </span>
             `;
             
             optionsArea.innerHTML = '';
-            
-            questionSentenceEl.innerHTML = '<span style="color:var(--text-grey); font-size:1.2rem">บทเรียนจบแล้ว</span>';
+            questionSentenceEl.innerHTML = '<span style="color:#b2bec3; font-size:1.2rem">บทเรียนจบแล้ว</span>';
             questionSentenceEl.style.textAlign = 'center';
             questionSentenceEl.style.display = 'flex';
             questionSentenceEl.style.justifyContent = 'center';
@@ -804,7 +827,6 @@
             
             nextBtn.onclick = () => {
                 if (isAutoModeActive) toggleAutoMode();
-                gameContainerEl.classList.remove('theme-type-1', 'theme-type-2', 'theme-type-3', 'theme-type-4');
                 showScreen(levelSelectScreen);
             };
         }
