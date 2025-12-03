@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Preposition Master V7.1</title>
+    <title>Preposition Master V8</title>
     <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@400;600;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 
@@ -170,14 +170,15 @@
             word-wrap: break-word;
         }
 
+        /* --- แก้ไข: ให้เส้นขีดอยู่ในระดับเดียวกับตัวอักษร --- */
         .blank {
             color: var(--primary-color);
             font-weight: 800;
-            padding: 0 5px;
+            padding: 0 2px; /* ลด padding ลงเล็กน้อยให้เส้นกระชับ */
             text-decoration: none;
             border-bottom: 3px solid var(--primary-color);
-            display: inline-block;
-            line-height: 1.2;
+            display: inline; /* ใช้ inline เพื่อให้เส้นแนบไปกับบรรทัด (Baseline) */
+            line-height: inherit;
         }
 
         #feedback-message {
@@ -325,7 +326,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/js/all.min.js"></script>
 
     <script>
-        /* ------------------- Preposition Master V7.1 Logic ------------------- */
+        /* ------------------- Preposition Master V8 Logic ------------------- */
         
         // Data Structure
         const LEVEL_DATA = [
