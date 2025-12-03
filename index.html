@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Preposition Master V8</title>
+    <title>Preposition Master V9</title>
     <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@400;600;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 
@@ -11,16 +11,22 @@
         /* --- Color Palette & Variables --- */
         :root {
             --primary-color: #6C63FF; 
-            --primary-dark: #5a52d5;
-            --primary-light: #EEF2FF;
-            --secondary-color: #FF6584;
-            --correct-color: #00B894;
-            --wrong-color: #FF7675;
             --bg-gradient: linear-gradient(135deg, #a8c0ff 0%, #3f2b96 100%);
             --text-dark: #2D3436;
             --text-grey: #636E72;
             --radius-xl: 24px;
             --radius-md: 16px;
+            
+            /* Status Colors */
+            --correct-color: #00B894;
+            --wrong-color: #FF7675;
+        }
+
+        /* Dynamic Theme Variables (Will be updated via JS) */
+        :root {
+            --theme-bg: #EEF2FF;
+            --theme-text: #2D3436;
+            --theme-accent: #6C63FF;
         }
 
         body {
@@ -53,9 +59,9 @@
         }
 
         header {
-            background: var(--primary-light);
+            background: white;
             padding: 1.5rem 1rem 1rem 1rem;
-            border-bottom: 2px solid rgba(108, 99, 255, 0.1);
+            border-bottom: 2px solid rgba(0,0,0,0.05);
         }
         
         header h1 {
@@ -67,7 +73,6 @@
             letter-spacing: 1px;
             cursor: pointer;
             user-select: none;
-            text-shadow: 2px 2px 0px rgba(0,0,0,0.05);
             transition: transform 0.2s;
         }
         
@@ -115,6 +120,7 @@
             white-space: normal;
         }
 
+        /* Level Colors (Use direct colors here for selection screen) */
         .level-btn[data-type="1"] { background: #E3F2FD; color: #1565C0; }
         .level-btn[data-type="2"] { background: #E8F5E9; color: #2E7D32; }
         .level-btn[data-type="3"] { background: #FFF3E0; color: #E65100; }
@@ -137,23 +143,30 @@
         .level-name-main { font-size: 1.1rem; font-weight: 800; line-height: 1.2; margin-bottom: 5px;}
         .level-sub-detail { font-size: 0.85rem; opacity: 0.9; line-height: 1.2; }
 
-        /* Game Area */
+        /* --- Game Area (Themed) --- */
         .top-content { flex-grow: 1; display: flex; flex-direction: column; }
+
+        /* Dynamic Theme Classes */
+        .theme-type-1 { --theme-bg: #E3F2FD; --theme-text: #1565C0; --theme-accent: #1976D2; }
+        .theme-type-2 { --theme-bg: #E8F5E9; --theme-text: #2E7D32; --theme-accent: #388E3C; }
+        .theme-type-3 { --theme-bg: #FFF3E0; --theme-text: #E65100; --theme-accent: #F57C00; }
+        .theme-type-4 { --theme-bg: #F3E5F5; --theme-text: #6A1B9A; --theme-accent: #7B1FA2; }
 
         .status-bar {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            background: white;
+            background: var(--theme-bg); /* Dynamic */
             padding: 10px 15px;
             border-radius: 50px;
             margin-bottom: 1.5rem;
             box-shadow: 0 2px 10px rgba(0,0,0,0.05);
             font-weight: 700;
-            color: var(--text-grey);
+            color: var(--theme-text); /* Dynamic */
             font-size: 0.9rem;
+            transition: all 0.3s;
         }
-        .score-pill { color: var(--primary-color); }
+        .score-pill { color: var(--theme-accent); }
 
         #question-sentence {
             font-size: 1.6rem;
@@ -161,23 +174,23 @@
             line-height: 1.6;
             text-align: left;
             padding: 25px;
-            background: linear-gradient(to bottom right, #ffffff, #f8f9fe);
-            border: 2px solid #edf2f7;
+            background: var(--theme-bg); /* Dynamic */
+            color: var(--theme-text);    /* Dynamic */
+            border: 2px solid rgba(0,0,0,0.05);
             border-radius: var(--radius-xl);
             box-shadow: 0 5px 15px rgba(0,0,0,0.03);
-            color: var(--text-dark);
             margin-bottom: 1rem;
             word-wrap: break-word;
+            transition: all 0.3s;
         }
 
-        /* --- แก้ไข: ให้เส้นขีดอยู่ในระดับเดียวกับตัวอักษร --- */
         .blank {
-            color: var(--primary-color);
+            color: var(--theme-accent); /* Dynamic */
             font-weight: 800;
-            padding: 0 2px; /* ลด padding ลงเล็กน้อยให้เส้นกระชับ */
+            padding: 0 2px;
             text-decoration: none;
-            border-bottom: 3px solid var(--primary-color);
-            display: inline; /* ใช้ inline เพื่อให้เส้นแนบไปกับบรรทัด (Baseline) */
+            border-bottom: 3px solid var(--theme-accent);
+            display: inline;
             line-height: inherit;
         }
 
@@ -197,15 +210,15 @@
         }
 
         .option-btn {
-            background-color: var(--primary-light); 
-            color: var(--primary-dark);
+            background-color: var(--theme-bg); /* Dynamic */
+            color: var(--theme-text);          /* Dynamic */
             border: none;
             border-radius: var(--radius-md);
             padding: 15px 10px;
             font-size: 1.3rem;
             font-weight: 700;
             cursor: pointer;
-            box-shadow: 0 4px 0 rgba(108, 99, 255, 0.2);
+            box-shadow: 0 4px 0 rgba(0,0,0,0.1);
             transition: all 0.1s;
             min-height: 60px;
             display: flex;
@@ -216,13 +229,12 @@
         }
 
         .option-btn:hover:not(:disabled) {
-            background-color: var(--primary-color);
-            color: white;
+            filter: brightness(0.95);
             transform: translateY(-2px);
-            box-shadow: 0 6px 0 rgba(90, 82, 213, 0.4);
+            box-shadow: 0 6px 0 rgba(0,0,0,0.15);
         }
 
-        .option-btn:active:not(:disabled) {
+        .option-btn:active:not(:disabled), .option-btn.simulated-active {
             transform: translateY(4px);
             box-shadow: none;
         }
@@ -259,11 +271,27 @@
             font-weight: 800;
             cursor: pointer;
             box-shadow: 0 5px 15px rgba(0,0,0,0.2);
-            transition: transform 0.1s;
+            transition: transform 0.1s, background-color 0.2s;
         }
         
-        #next-btn:active { transform: scale(0.98); }
-        #next-btn:disabled { background-color: #dfe6e9; color: #b2bec3; cursor: default; box-shadow: none; }
+        #next-btn:active, #next-btn.simulated-click { 
+            transform: scale(0.98); 
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+        
+        /* Auto Mode: Next Button looks normal even if logically disabled */
+        #next-btn:disabled { 
+            /* background-color: #dfe6e9; color: #b2bec3; */ /* Old disabled style */
+            opacity: 1; /* Keep visible */
+            cursor: default;
+        }
+        /* Specific visual disabled state for manual mode if needed, 
+           but for this request we keep it looking 'ready' to avoid blur */
+        .manual-disabled {
+            background-color: #dfe6e9 !important;
+            color: #b2bec3 !important;
+            box-shadow: none !important;
+        }
 
         .confetti {
             position: absolute;
@@ -315,7 +343,7 @@
             </div>
 
             <div id="game-footer">
-                <button id="next-btn" disabled>ข้อถัดไป <i class="fa-solid fa-arrow-right"></i></button>
+                <button id="next-btn">ข้อถัดไป <i class="fa-solid fa-arrow-right"></i></button>
             </div>
         </div>
     </div>
@@ -326,9 +354,9 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/js/all.min.js"></script>
 
     <script>
-        /* ------------------- Preposition Master V8 Logic ------------------- */
+        /* ------------------- Preposition Master V9 Logic ------------------- */
         
-        // Data Structure
+        // Data Structure (Same as V8)
         const LEVEL_DATA = [
             // TYPE 1: PLACE
             { type: 1, title: "1. PLACE (ตำแหน่ง)", levels: [
@@ -502,7 +530,8 @@
         const optionsArea = document.getElementById('options-area');
         const nextBtn = document.getElementById('next-btn');
         const headerTitleEl = document.querySelector('header h1'); 
-        
+        const gameContainerEl = document.querySelector('.container');
+
         const correctAudio = document.getElementById('correct-audio');
         const incorrectAudio = document.getElementById('incorrect-audio');
 
@@ -531,7 +560,22 @@
         function speakAnswer(text, onEndCallback) {
             if (synth.speaking) synth.cancel();
             ttsUtterance.text = text;
-            ttsUtterance.onend = onEndCallback;
+            
+            // ใช้ Event Handler แบบปลอดภัย
+            const handleEnd = () => {
+                ttsUtterance.removeEventListener('end', handleEnd);
+                if(onEndCallback) onEndCallback();
+            };
+            ttsUtterance.addEventListener('end', handleEnd);
+            
+            // Backup timeout in case onend doesn't fire (browser issue)
+            const backupTimeout = setTimeout(() => {
+                if(synth.speaking) {
+                    // Still speaking? let it be. If stuck, force next.
+                    // Simplified: just rely on onEnd mostly.
+                }
+            }, 5000);
+
             synth.speak(ttsUtterance);
         }
 
@@ -555,10 +599,20 @@
 
         function autoAnswer(delay = 2000) {
             if (!isAutoModeActive || isAnswered) return;
+            
+            // Wait for delay, then answer
             setTimeout(() => {
-                if (!isAutoModeActive || isAnswered) return; 
+                if (!isAutoModeActive || isAnswered) return; // Check again
+                
                 const correctButton = document.querySelector(`.option-btn[data-is-correct="true"]`);
-                if (correctButton) correctButton.click();
+                if (correctButton) {
+                    // Simulate visual press
+                    correctButton.classList.add('simulated-active');
+                    setTimeout(() => {
+                        correctButton.classList.remove('simulated-active');
+                        correctButton.click();
+                    }, 150);
+                }
             }, delay);
         }
 
@@ -566,6 +620,14 @@
         function showScreen(screenEl) {
             document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
             screenEl.classList.add('active');
+        }
+
+        // Set Dynamic Theme
+        function setGameTheme(typeId) {
+            // Remove old theme classes
+            gameContainerEl.classList.remove('theme-type-1', 'theme-type-2', 'theme-type-3', 'theme-type-4');
+            // Add new theme class
+            gameContainerEl.classList.add(`theme-type-${typeId}`);
         }
 
         function createLevelButtons() {
@@ -595,8 +657,8 @@
 
         // --- Game Logic ---
         function startLevel(typeId, subId) {
-            // FIX: Reset nextBtn handler to default quiz logic when starting a level
             nextBtn.onclick = handleNextQuestion; 
+            setGameTheme(typeId); // Apply colors
 
             currentLevelData = LEVEL_DATA.find(d => d.type === typeId);
             currentSubLevel = currentLevelData.levels.find(l => l.sub === subId);
@@ -624,7 +686,12 @@
             }
             
             isAnswered = false;
-            nextBtn.disabled = true;
+            
+            // Manual Mode: Disable button visual. Auto Mode: Keep it fully opaque.
+            nextBtn.disabled = true; 
+            if(!isAutoModeActive) nextBtn.classList.add('manual-disabled');
+            else nextBtn.classList.remove('manual-disabled');
+
             nextBtn.innerHTML = 'ข้อถัดไป <i class="fa-solid fa-arrow-right"></i>';
             feedbackMessageEl.textContent = 'เลือกคำตอบที่ถูกต้อง';
             feedbackMessageEl.style.color = 'var(--text-grey)';
@@ -662,6 +729,7 @@
                 optionsArea.appendChild(btn);
             });
 
+            // Auto Mode: Wait 2 seconds (read question) then answer
             if (isAutoModeActive) autoAnswer(2000);
         }
 
@@ -698,10 +766,21 @@
 
             updateUI();
             
+            // Speak, then move next
             speakAnswer(currentQuestion.ttsContext, () => {
                 setTimeout(() => {
                     nextBtn.disabled = false;
-                    if (isAutoModeActive) nextBtn.click();
+                    nextBtn.classList.remove('manual-disabled');
+                    
+                    if (isAutoModeActive) {
+                        // Simulate Next Button Click Visually
+                        nextBtn.classList.add('simulated-click');
+                        setTimeout(() => {
+                            nextBtn.classList.remove('simulated-click');
+                            // Actually trigger logic
+                            if(nextBtn.onclick) nextBtn.onclick();
+                        }, 150);
+                    }
                 }, 500);
             });
         }
@@ -730,11 +809,16 @@
             questionSentenceEl.style.minHeight = '100px';
 
             nextBtn.disabled = false;
+            nextBtn.classList.remove('manual-disabled');
             nextBtn.innerHTML = '<i class="fa-solid fa-house"></i> กลับหน้าหลัก';
             
             // Override nextBtn for 'Back to Home'
             nextBtn.onclick = () => {
+                // If auto mode was on, turn it off when going home
                 if (isAutoModeActive) toggleAutoMode();
+                
+                // Reset Theme
+                gameContainerEl.classList.remove('theme-type-1', 'theme-type-2', 'theme-type-3', 'theme-type-4');
                 showScreen(levelSelectScreen);
             };
         }
@@ -753,9 +837,8 @@
 
         headerTitleEl.addEventListener('dblclick', toggleAutoMode);
         
-        // Initial setup for nextBtn
+        // Initial setup
         nextBtn.onclick = handleNextQuestion;
-
         createLevelButtons();
     </script>
 </body>
