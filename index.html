@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Preposition Master V9</title>
+    <title>Preposition Master V9.1</title>
     <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@400;600;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 
@@ -279,14 +279,10 @@
             box-shadow: 0 2px 5px rgba(0,0,0,0.2);
         }
         
-        /* Auto Mode: Next Button looks normal even if logically disabled */
         #next-btn:disabled { 
-            /* background-color: #dfe6e9; color: #b2bec3; */ /* Old disabled style */
-            opacity: 1; /* Keep visible */
+            opacity: 1; 
             cursor: default;
         }
-        /* Specific visual disabled state for manual mode if needed, 
-           but for this request we keep it looking 'ready' to avoid blur */
         .manual-disabled {
             background-color: #dfe6e9 !important;
             color: #b2bec3 !important;
@@ -354,9 +350,8 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/js/all.min.js"></script>
 
     <script>
-        /* ------------------- Preposition Master V9 Logic ------------------- */
+        /* ------------------- Preposition Master V9.1 Logic ------------------- */
         
-        // Data Structure (Same as V8)
         const LEVEL_DATA = [
             // TYPE 1: PLACE
             { type: 1, title: "1. PLACE (ตำแหน่ง)", levels: [
@@ -561,19 +556,15 @@
             if (synth.speaking) synth.cancel();
             ttsUtterance.text = text;
             
-            // ใช้ Event Handler แบบปลอดภัย
             const handleEnd = () => {
                 ttsUtterance.removeEventListener('end', handleEnd);
                 if(onEndCallback) onEndCallback();
             };
             ttsUtterance.addEventListener('end', handleEnd);
             
-            // Backup timeout in case onend doesn't fire (browser issue)
-            const backupTimeout = setTimeout(() => {
-                if(synth.speaking) {
-                    // Still speaking? let it be. If stuck, force next.
-                    // Simplified: just rely on onEnd mostly.
-                }
+            // Backup logic in case of event fail
+            setTimeout(() => {
+                if(synth.speaking) {} 
             }, 5000);
 
             synth.speak(ttsUtterance);
@@ -599,14 +590,11 @@
 
         function autoAnswer(delay = 2000) {
             if (!isAutoModeActive || isAnswered) return;
-            
-            // Wait for delay, then answer
             setTimeout(() => {
-                if (!isAutoModeActive || isAnswered) return; // Check again
+                if (!isAutoModeActive || isAnswered) return; 
                 
                 const correctButton = document.querySelector(`.option-btn[data-is-correct="true"]`);
                 if (correctButton) {
-                    // Simulate visual press
                     correctButton.classList.add('simulated-active');
                     setTimeout(() => {
                         correctButton.classList.remove('simulated-active');
@@ -622,11 +610,8 @@
             screenEl.classList.add('active');
         }
 
-        // Set Dynamic Theme
         function setGameTheme(typeId) {
-            // Remove old theme classes
             gameContainerEl.classList.remove('theme-type-1', 'theme-type-2', 'theme-type-3', 'theme-type-4');
-            // Add new theme class
             gameContainerEl.classList.add(`theme-type-${typeId}`);
         }
 
@@ -658,7 +643,7 @@
         // --- Game Logic ---
         function startLevel(typeId, subId) {
             nextBtn.onclick = handleNextQuestion; 
-            setGameTheme(typeId); // Apply colors
+            setGameTheme(typeId); 
 
             currentLevelData = LEVEL_DATA.find(d => d.type === typeId);
             currentSubLevel = currentLevelData.levels.find(l => l.sub === subId);
@@ -672,7 +657,7 @@
 
         function handleNextQuestion() {
             if (currentQuizIndex >= currentLevelQuestions.length) {
-                showScreen(levelSelectScreen); // Fallback
+                showScreen(levelSelectScreen);
             } else {
                 currentQuizIndex++;
                 nextQuestion();
@@ -687,7 +672,9 @@
             
             isAnswered = false;
             
-            // Manual Mode: Disable button visual. Auto Mode: Keep it fully opaque.
+            // Fix: Reset Styles set by EndGame to prevent flexbox distortion
+            questionSentenceEl.removeAttribute('style');
+
             nextBtn.disabled = true; 
             if(!isAutoModeActive) nextBtn.classList.add('manual-disabled');
             else nextBtn.classList.remove('manual-disabled');
@@ -729,7 +716,6 @@
                 optionsArea.appendChild(btn);
             });
 
-            // Auto Mode: Wait 2 seconds (read question) then answer
             if (isAutoModeActive) autoAnswer(2000);
         }
 
@@ -766,18 +752,15 @@
 
             updateUI();
             
-            // Speak, then move next
             speakAnswer(currentQuestion.ttsContext, () => {
                 setTimeout(() => {
                     nextBtn.disabled = false;
                     nextBtn.classList.remove('manual-disabled');
                     
                     if (isAutoModeActive) {
-                        // Simulate Next Button Click Visually
                         nextBtn.classList.add('simulated-click');
                         setTimeout(() => {
                             nextBtn.classList.remove('simulated-click');
-                            // Actually trigger logic
                             if(nextBtn.onclick) nextBtn.onclick();
                         }, 150);
                     }
@@ -801,6 +784,8 @@
             `;
             
             optionsArea.innerHTML = '';
+            
+            // Set styles for End Game message (This caused the bug, now fixed in nextQuestion reset)
             questionSentenceEl.innerHTML = '<span style="color:var(--text-grey); font-size:1.2rem">บทเรียนจบแล้ว</span>';
             questionSentenceEl.style.textAlign = 'center';
             questionSentenceEl.style.display = 'flex';
@@ -812,12 +797,9 @@
             nextBtn.classList.remove('manual-disabled');
             nextBtn.innerHTML = '<i class="fa-solid fa-house"></i> กลับหน้าหลัก';
             
-            // Override nextBtn for 'Back to Home'
             nextBtn.onclick = () => {
-                // If auto mode was on, turn it off when going home
                 if (isAutoModeActive) toggleAutoMode();
-                
-                // Reset Theme
+                // Clear theme when going home
                 gameContainerEl.classList.remove('theme-type-1', 'theme-type-2', 'theme-type-3', 'theme-type-4');
                 showScreen(levelSelectScreen);
             };
@@ -836,8 +818,6 @@
         }
 
         headerTitleEl.addEventListener('dblclick', toggleAutoMode);
-        
-        // Initial setup
         nextBtn.onclick = handleNextQuestion;
         createLevelButtons();
     </script>
